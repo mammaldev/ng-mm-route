@@ -1,5 +1,5 @@
 {
-  "name": "ng-mm-router",
+  "name": "ng-mm-route",
   "version": "0.1.0",
   "devDependencies": {
     "karma": "^0.12.23",
