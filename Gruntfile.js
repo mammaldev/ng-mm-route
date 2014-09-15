@@ -1,6 +1,8 @@
 module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.initConfig({
@@ -36,11 +38,33 @@ module.exports = function (grunt) {
           singleRun: true
         }
       }
+    },
+    uglify: {
+      all: {
+        options: {
+          sourceMap: true
+        },
+        files: {
+          'dist/mm-route.min.js': [
+            'src/mm-route.js'
+          ]
+        }
+      }
+    },
+    copy: {
+      all: {
+        src: 'src/mm-route.js',
+        dest: 'dist/',
+        expand: true,
+        flatten: true
+      }
     }
   });
 
   grunt.registerTask('default', [
     'jshint',
-    'karma'
+    'karma',
+    'uglify',
+    'copy'
   ]);
 };

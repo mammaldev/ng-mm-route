@@ -1,6 +1,7 @@
 {
   "name": "ng-mm-route",
   "version": "0.1.0",
+  "main": "dist/mm-route.js",
   "dependencies": {
     "angular": "^1.2.0",
     "angular-route": "^1.2.0",
