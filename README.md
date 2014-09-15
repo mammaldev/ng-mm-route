@@ -1,4 +1,4 @@
-# ng-mm-router
+# ng-mm-route
 
 An AngularJS module that creates a simple mechanism for robust role-based
 routing. The `mm.route` module contains a single provider named
