@@ -119,9 +119,6 @@ angular.module('mm.route', [
     //
     function get(name, data, role) {
 
-      var keys = name.split('.');
-      var route;
-
       // The `data` and `role` arguments are both optional. This handles the
       // case where `data` is undefined but `role` is not
       if (arguments.length === 2 && typeof data === 'string') {
@@ -129,22 +126,8 @@ angular.module('mm.route', [
         data = undefined;
       }
 
-      if (role) {
-
-        // If a role is specified we want to return the route corresponding to
-        // that role (if it exists)
-        route = mapKeys(keys, routes[role]);
-      } else {
-
-        // If a role was not specified we return the first matching route for
-        // the roles available to the active user
-        for (var i = 0; i < roles.length; i++) {
-          route = mapKeys(keys, routes[roles[i]]);
-          if (route) {
-            break;
-          }
-        }
-      }
+      // Get the matching route definition
+      var route = getRoute(name, role);
 
       // If we haven't found a matching route by now then either it doesn't
       // exist or the user does not have a role that is able to access it. In
@@ -167,8 +150,42 @@ angular.module('mm.route', [
       return route.url;
     }
 
+    //
+    // Get a route definition by name and role.
+    //
+    // Arguments:
+    //   name      {String}    Name of the route; nested names separated by .
+    //   [role]    {String}    The role to use in the case of multiple routes
+    //
+    function getRoute(name, role) {
+
+      var keys = name.split('.');
+      var route;
+
+      if (role) {
+
+        // If a role is specified we want to return the route corresponding to
+        // that role (if it exists)
+        return mapKeys(keys, routes[role]);
+
+      } else {
+
+        // If a role was not specified we return the first matching route for
+        // the roles available to the active user
+        for (var i = 0; i < roles.length; i++) {
+          route = mapKeys(keys, routes[roles[i]]);
+          if (route) {
+            return route;
+          }
+        }
+      }
+
+      return route;
+    }
+
     return {
-      get: get
+      get: get,
+      getRoute: getRoute
     };
   };
 });

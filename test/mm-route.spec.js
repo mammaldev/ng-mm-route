@@ -137,5 +137,23 @@ describe('mm.route module', function () {
         })).toEqual('/users/12345');
       });
     });
+
+    it('should allow retrieval of a route definition by role', function () {
+      angular.mock.module(function (mmRouteProvider) {
+        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoutes({
+          ADMIN: {
+            settings: {
+              url: '/settings',
+              arbitraryData: 42
+            }
+          }
+        });
+      });
+      angular.mock.inject(function (mmRoute) {
+        var route = mmRoute.getRoute('settings');
+        expect(route.arbitraryData).toEqual(42);
+      });
+    });
   });
 });
