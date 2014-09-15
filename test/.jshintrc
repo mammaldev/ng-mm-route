@@ -1,0 +1,25 @@
+{
+  "camelcase": true,
+  "curly": true,
+  "eqeqeq": true,
+  "forin": true,
+  "freeze": true,
+  "immed": true,
+  "latedef": "nofunc",
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "nonbsp": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true,
+  "node": true,
+  "globals": {
+    "angular": false,
+    "jasmine": false,
+    "beforeEach": false,
+    "describe": false,
+    "expect": false,
+    "it": false
+  }
+}
