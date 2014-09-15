@@ -136,18 +136,21 @@ angular.module('mm.route', [
         return;
       }
 
+      // Copy the URL string so we don't affect the actual route definition
+      var url = route.url;
+
       // If there's no data to interpolate into the URL then we're done
       if (data === undefined) {
-        return route.url;
+        return url;
       }
 
       // If there is data to interpolate into the URL we interpolate it now and
       // return the finished URL string
       Object.keys(data).forEach(function (key) {
-        route.url = route.url.replace(':' + key, data[key]);
+        url = url.replace(':' + key, data[key]);
       });
 
-      return route.url;
+      return url;
     }
 
     //
