@@ -117,8 +117,8 @@ methods that can be used to facilitate routing within your app:
 #### `mmRoute.get('profile.view')`
 
 Get the URL associated with a given route. Given the route definitions above,
-this call would return `'/profile/12345/edit'` if the active user had the
-`admin` role.
+this call would return `'/admin-profile'` if the active user had the `admin`
+role.
 
 By attaching this method to an Angular scope object (with `$scope.routes =
 mmRoute` for example) you'll be able to access it in your templates:
