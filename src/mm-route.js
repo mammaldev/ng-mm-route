@@ -30,12 +30,13 @@ angular.module('mm.route', [
       return obj;
     }
 
-    var key = keys.shift();
+    var key = keys[0];
+
     if (!obj.hasOwnProperty(key)) {
       return;
     }
 
-    return mapKeys(keys, obj[key]);
+    return mapKeys(keys.slice(1, keys.length), obj[key]);
   }
 
   //
