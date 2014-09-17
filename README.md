@@ -145,4 +145,10 @@ depending on whether a data object is specified as the second):
 mmRoute.get('profile.view', 'user');
 ```
 
+#### `mmRoute.goTo('profile.view')`
+
+Redirect the browser (via the AngularJS `$location` service) to the URL
+associated with the provided route. This method accepts the same arguments as
+the `mmRoute.get` method and behaves in the same way.
+
 [ngroute]: https://docs.angularjs.org/api/ngRoute
