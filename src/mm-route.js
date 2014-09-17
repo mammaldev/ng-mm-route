@@ -104,7 +104,7 @@ angular.module('mm.route', [
   };
 
   // Set up the mmRoute factory
-  this.$get = function mmRouteFactory() {
+  this.$get = function mmRouteFactory($location) {
 
     var routes = this.routes;
     var roles = this.roles;
@@ -187,8 +187,20 @@ angular.module('mm.route', [
       return route;
     }
 
+    //
+    // Redirect the browser to the URL associated with a route.
+    //
+    // Arguments:
+    //   name      {String}    Name of the route; nested names separated by .
+    //   [role]    {String}    The role to use in the case of multiple routes
+    //
+    function goTo(name, role) {
+      $location.url(get(name, role));
+    }
+
     return {
       get: get,
+      goTo: goTo,
       getRoute: getRoute
     };
   };
