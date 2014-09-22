@@ -14,7 +14,7 @@ angular.module('mm.route', [
 
         // If this is an actual route definition then add it to the
         // $routeProvider
-        $routeProvider.when(baseRoute.url, baseRoute);
+        $routeProvider.when(baseRoute.url.split('?')[0], baseRoute);
       } else {
 
         // Otherwise it's a nested definition and we need to recurse into it
