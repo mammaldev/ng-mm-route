@@ -19,10 +19,14 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         options: {
+          preprocessors: {
+            'src/*.js': 'coverage'
+          },
           frameworks: [
             'jasmine'
           ],
           reporters: [
+            'coverage',
             'progress'
           ],
           browsers: [
