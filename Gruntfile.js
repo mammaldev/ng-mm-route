@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
 
+  grunt.loadNpmTasks('grunt-istanbul-coverage');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -39,8 +40,24 @@ module.exports = function (grunt) {
             'src/mm-route.js',
             'test/*.js'
           ],
+          coverageReporter: {
+            type: 'json',
+            dir: 'coverage',
+            subdir: '.'
+          },
           singleRun: true
         }
+      }
+    },
+    coverage: {
+      options: {
+        thresholds: {
+          statements: 100,
+          functions: 100,
+          branches: 100,
+          lines: 100
+        },
+        dir: 'coverage'
       }
     },
     uglify: {
@@ -68,6 +85,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'jshint',
     'karma',
+    'coverage',
     'uglify',
     'copy'
   ]);
