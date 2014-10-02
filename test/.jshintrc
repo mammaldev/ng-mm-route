@@ -20,6 +20,7 @@
     "beforeEach": false,
     "describe": false,
     "expect": false,
+    "spyOn": false,
     "it": false
   }
 }

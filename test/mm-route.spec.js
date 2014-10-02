@@ -25,8 +25,26 @@ describe('mm.route module', function () {
       });
     });
 
+    it('should throw when configuring routes before roles', function () {
+      function test() {
+        angular.mock.module(function (mmRouteProvider) {
+          mmRouteProvider.setRoutes({
+            ADMIN: {
+              settings: {
+                url: '/settings'
+              }
+            }
+          });
+        });
+        angular.mock.inject(function (mmRoute) {
+          return mmRoute;
+        });
+      }
+      expect(test).toThrow();
+    });
+
     methods.forEach(function (method) {
-      it('should have a setRoles method', function () {
+      it('should have a ' + method + ' method', function () {
         expect(provider[method]).toEqual(jasmine.any(Function));
       });
     });
@@ -59,7 +77,7 @@ describe('mm.route module', function () {
     // Simple (non-nested) routes can be accessed by simply providing the name
     it('should allow the retrieval of URLs', function () {
       angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoles([ 'ADMIN', 'BASIC' ]);
         mmRouteProvider.setRoutes({
           ADMIN: {
             settings: {
@@ -70,6 +88,22 @@ describe('mm.route module', function () {
       });
       angular.mock.inject(function (mmRoute) {
         expect(mmRoute.get('settings')).toEqual('/settings');
+      });
+    });
+
+    it('should return undefined for undefined routes', function () {
+      angular.mock.module(function (mmRouteProvider) {
+        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoutes({
+          ADMIN: {
+            settings: {
+              url: '/settings'
+            }
+          }
+        });
+      });
+      angular.mock.inject(function (mmRoute) {
+        expect(mmRoute.get('profile')).toEqual(undefined);
       });
     });
 
@@ -153,6 +187,26 @@ describe('mm.route module', function () {
       angular.mock.inject(function (mmRoute) {
         var route = mmRoute.getRoute('settings');
         expect(route.arbitraryData).toEqual(42);
+      });
+    });
+
+    // The goTo method uses the built-in Angular $location service to change
+    // the URL in the browser
+    it('should allow redirection of browser via a goTo method', function () {
+      angular.mock.module(function (mmRouteProvider) {
+        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoutes({
+          ADMIN: {
+            settings: {
+              url: '/settings'
+            }
+          }
+        });
+      });
+      angular.mock.inject(function ($location, mmRoute) {
+        spyOn($location, 'url');
+        mmRoute.goTo('settings');
+        expect($location.url).toHaveBeenCalledWith('/settings');
       });
     });
   });
