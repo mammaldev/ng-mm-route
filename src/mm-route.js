@@ -3,8 +3,9 @@ angular.module('mm.route', [
 ])
 .provider('mmRoute', [ '$routeProvider', function ($routeProvider) {
 
-  var interpolation = /:([^\/]+)/g;
-  var interpolationMarkers = /[:*]/g;
+  var interpolation = /:[^\/]+/g;
+  var interpolationMarkers = /[:*?]/g;
+  var interpolationOptional = /:[^\/]+\?/g;
 
   // Utility function to add route definitions to the $routeProvider from the
   // ngRoute module
@@ -149,7 +150,7 @@ angular.module('mm.route', [
 
       // If there is data to interpolate into the URL we interpolate it now and
       // return the finished URL string
-      if (parts) {
+      if (parts && data) {
 
         Object.keys(data).forEach(function (key) {
 
@@ -171,6 +172,10 @@ angular.module('mm.route', [
           });
         });
       }
+
+      // If there are any optional interpolation parts left in the URL at this
+      // point then data wasn't provided for them and they can be removed
+      url = url.replace(interpolationOptional, '');
 
       return url;
     }

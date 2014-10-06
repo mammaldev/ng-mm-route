@@ -191,6 +191,25 @@ describe('mm.route module', function () {
       });
     });
 
+    it('should allow optional interpolation parts marked with ?', function () {
+      angular.mock.module(function (mmRouteProvider) {
+        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoutes({
+          ADMIN: {
+            user: {
+              url: '/users/:userId?'
+            }
+          }
+        });
+      });
+      angular.mock.inject(function (mmRoute) {
+        expect(mmRoute.get('user')).toEqual('/users/');
+        expect(mmRoute.get('user', {
+          userId: '12345'
+        })).toEqual('/users/12345');
+      });
+    });
+
     it('should allow retrieval of a route definition by role', function () {
       angular.mock.module(function (mmRouteProvider) {
         mmRouteProvider.setRoles([ 'ADMIN' ]);
