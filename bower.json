@@ -1,6 +1,6 @@
 {
   "name": "ng-mm-route",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/mm-route.js",
   "ignore": [
     ".jshintrc",
