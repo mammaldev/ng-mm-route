@@ -3,6 +3,9 @@ angular.module('mm.route', [
 ])
 .provider('mmRoute', [ '$routeProvider', function ($routeProvider) {
 
+  var interpolation = /:([^\/]+)/g;
+  var interpolationMarkers = /[:*]/g;
+
   // Utility function to add route definitions to the $routeProvider from the
   // ngRoute module
   function applyRoutes(routes) {
@@ -119,6 +122,7 @@ angular.module('mm.route', [
     //   [role]    {String}    The role to use in the case of multiple routes
     //
     function get(name, data, role) {
+      /*jshint devel: true */
 
       // The `data` and `role` arguments are both optional. This handles the
       // case where `data` is undefined but `role` is not
@@ -140,16 +144,33 @@ angular.module('mm.route', [
       // Copy the URL string so we don't affect the actual route definition
       var url = route.url;
 
-      // If there's no data to interpolate into the URL then we're done
-      if (data === undefined) {
-        return url;
-      }
+      // Get any interpolation strings from the URL definition
+      var parts = url.match(interpolation);
 
       // If there is data to interpolate into the URL we interpolate it now and
       // return the finished URL string
-      Object.keys(data).forEach(function (key) {
-        url = url.replace(':' + key, data[key]);
-      });
+      if (parts) {
+
+        Object.keys(data).forEach(function (key) {
+
+          parts.forEach(function (part) {
+
+            var matcher = part.replace(interpolationMarkers, '');
+            var greedy = part.indexOf('*') === part.length - 1;
+
+            // If the interpolation string ends with * we greedily match it
+            if (greedy && key.slice(0, matcher.length) === matcher) {
+
+              url = url.replace(part, data[key]);
+
+            // Otherwise we need an exact match
+            } else if (!greedy && key === matcher) {
+
+              url = url.replace(part, data[key]);
+            }
+          });
+        });
+      }
 
       return url;
     }

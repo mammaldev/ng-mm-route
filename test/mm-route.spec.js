@@ -167,6 +167,25 @@ describe('mm.route module', function () {
       });
       angular.mock.inject(function (mmRoute) {
         expect(mmRoute.get('user', {
+          userId: '12345',
+          other: '6789'
+        })).toEqual('/users/12345');
+      });
+    });
+
+    it('should greedily match interpolated parts marked with *', function () {
+      angular.mock.module(function (mmRouteProvider) {
+        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoutes({
+          ADMIN: {
+            user: {
+              url: '/users/:user*'
+            }
+          }
+        });
+      });
+      angular.mock.inject(function (mmRoute) {
+        expect(mmRoute.get('user', {
           userId: '12345'
         })).toEqual('/users/12345');
       });
