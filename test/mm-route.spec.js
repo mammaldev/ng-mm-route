@@ -2,7 +2,7 @@ describe('mm.route module', function () {
 
   var provider;
 
-  beforeEach(angular.mock.module('mm.route'));
+  beforeEach(angular.mock.module('mmRoute'));
   beforeEach(angular.mock.module(function (mmRouteProvider) {
     provider = mmRouteProvider;
   }));

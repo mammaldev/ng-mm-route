@@ -1,8 +1,8 @@
 # ng-mm-route
 
 An AngularJS module that creates a simple mechanism for robust role-based
-routing. The `mm.route` module contains a single provider named
-`mmRouteProvider` which in turn provides an `mmRoute` factory.
+routing. The `mmRoute` module contains a single provider named `mmRouteProvider`
+which in turn provides an `mmRoute` factory.
 
 ## Installation
 
@@ -12,7 +12,7 @@ a dependency to your app:
 
 ```js
 angular.module('YourApp', [
-  'mm.route'
+  'mmRoute'
 ]);
 ```
 
@@ -50,7 +50,7 @@ more detail on the format of the object.
 ## Route definitions
 
 Your route definitions are how you associate a URL with a view (and often a
-controller). The `mm.route` module makes it easy to add user roles into the
+controller). The `mmRoute` module makes it easy to add user roles into the
 equation. The object passed to `mmRouteProvider.setRoutes` should have keys
 corresponding to user roles at the top level. Here's an example:
 
@@ -91,7 +91,7 @@ the `signup` route and the active user has the `user` role we will receive the
 relevant route object or URL.
 
 The format of the route definition object itself is identical to that used by
-the [`ngRoute`][ngroute] module. In fact, `mm.route` relies upon `ngRoute` under
+the [`ngRoute`][ngroute] module. In fact, `mmRoute` relies upon `ngRoute` under
 the hood which means you have a familiar and easy-to-migrate route setup.
 
 ### Grouped route definitions

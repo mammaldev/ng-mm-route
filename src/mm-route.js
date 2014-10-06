@@ -1,4 +1,4 @@
-angular.module('mm.route', [
+angular.module('mmRoute', [
   'ngRoute'
 ])
 .provider('mmRoute', [ '$routeProvider', function ($routeProvider) {
