@@ -22,26 +22,34 @@ The module is configured via the `mmRouteProvider`. Like any provider this can
 be injected into a module `config` function. The provider exposes a number of
 methods:
 
-#### `mmRouteProvider.setDefaultRoute('/404')`
+#### setDefaultRoute
+
+Example: `mmRouteProvider.setDefaultRoute('/404')`
 
 Set a URL to which the browser will be redirected in the event of a request to a
 URL that does not match a route definition. This method accepts a single
 argument which should always be a string.
 
-#### `mmRouteProvider.setBaseRoute('/home')`
+#### setBaseRoute
+
+Example: `mmRouteProvider.setBaseRoute('/home')`
 
 Set a URL to which the browser will be redirected when a request is made to the
 root URL. This is useful when your homepage is not found at the root URL. This
 method accepts a single argument which should always be a string.
 
-#### `mmRouteProvider.setRoles([ 'admin' ])`
+#### setRoles
+
+Example: `mmRouteProvider.setRoles([ 'admin' ])`
 
 Set the roles available to the *active user*. Usually you'd get this information
 from the server and output it into your page. The roles available will be used
 to determine which route definition (if any) should be used. This method accepts
 a single argument which should always be an array of strings.
 
-#### `mmRouteProvider.setRoutes({ /* ... */ })`
+#### setRoutes
+
+Example: `mmRouteProvider.setRoutes({ /* ... */ })`
 
 Set the routes available throughout the app. This method accepts a single
 argument which should always be an object. See the Route definitions section for
@@ -114,7 +122,9 @@ The `mmRouteProvider` provides the `mmRoute` factory. When injected into a
 controller, for example, the `mmRoute` factory will provide you with some
 methods that can be used to facilitate routing within your app:
 
-#### `mmRoute.get('profile.view')`
+#### get
+
+Example: `mmRoute.get('profile.view')`
 
 Get the URL associated with a given route. Given the route definitions above,
 this call would return `'/admin-profile'` if the active user had the `admin`
@@ -145,7 +155,9 @@ depending on whether a data object is specified as the second):
 mmRoute.get('profile.view', 'user');
 ```
 
-#### `mmRoute.goTo('profile.view')`
+#### goTo
+
+Example: `mmRoute.goTo('profile.view')`
 
 Redirect the browser (via the AngularJS `$location` service) to the URL
 associated with the provided route. This method accepts the same arguments as
