@@ -28,7 +28,7 @@ module.exports = function (grunt) {
           ],
           reporters: [
             'coverage',
-            'progress'
+            'mocha'
           ],
           browsers: [
             'PhantomJS'
