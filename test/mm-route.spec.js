@@ -15,7 +15,7 @@ describe('mm.route module', function () {
     var methods = [
       'setDefaultRoute',
       'setBaseRoute',
-      'setRoles',
+      'setRoleGetter',
       'setRoutes'
     ];
 
@@ -74,15 +74,15 @@ describe('mm.route module', function () {
       });
     });
 
+
     // Simple (non-nested) routes can be accessed by simply providing the name
     it('should allow the retrieval of URLs', function () {
       angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN', 'BASIC' ]);
+        mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; } );
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            settings: {
-              url: '/settings'
-            }
+          settings: {
+            url: '/settings',
+            access: [ { page: {} } ]
           }
         });
       });
@@ -93,12 +93,11 @@ describe('mm.route module', function () {
 
     it('should return undefined for undefined routes', function () {
       angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; } );
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            settings: {
-              url: '/settings'
-            }
+          settings: {
+            url: '/settings',
+            access: [ { page: {} } ]
           }
         });
       });
@@ -107,47 +106,47 @@ describe('mm.route module', function () {
       });
     });
 
+
     // Nested routes are accessed by concatenating the names with '.', as if
     // you were accessing the property in code directly
     it('should allow the retrieval of a URL from a nested route', function () {
-      angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
+      angular.mock.module(function ( mmRouteProvider ) {
+        mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            profile: {
-              settings: {
-                url: '/settings'
-              }
+          profile: {
+            settings: {
+              url: '/settings',
+              access: [ { page: {} } ]
             }
           }
         });
       });
-      angular.mock.inject(function (mmRoute) {
+      angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('profile.settings')).toEqual('/settings');
       });
     });
 
-    // If more than one role is specified and there is a matching route defined
-    // for more than one of those roles you should be able to specify which
-    // role to use
-    it('should allow the retrieval of a URL by role', function () {
-      angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN', 'USER' ]);
+    it('should allow for a retrieval of URL with multiple roles', function () {
+      angular.mock.module(function ( mmRouteProvider ) {
+        mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            settings: {
-              url: '/settings'
+          settings: {
+            url: '/settings',
+            access: [
+              {
+              page: {},
+              roles: ['ADMIN']
+            },
+            {
+              page: {},
+              roles: ['TEACHER']
             }
-          },
-          USER: {
-            settings: {
-              url: '/profile'
-            }
+            ]
           }
         });
       });
       angular.mock.inject(function (mmRoute) {
-        expect(mmRoute.get('settings', 'USER')).toEqual('/profile');
+        expect(mmRoute.get('settings')).toEqual('/settings');
       });
     });
 
@@ -156,12 +155,11 @@ describe('mm.route module', function () {
     // replaced
     it('should allow interpolation of data within URLs', function () {
       angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            user: {
-              url: '/users/:userId'
-            }
+          user: {
+            url: '/users/:userId',
+            access: [ { page: {} } ]
           }
         });
       });
@@ -172,15 +170,14 @@ describe('mm.route module', function () {
         })).toEqual('/users/12345');
       });
     });
-
+    
     it('should greedily match interpolated parts marked with *', function () {
       angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            user: {
-              url: '/users/:user*'
-            }
+          user: {
+            url: '/users/:user*',
+            access: [ { page: {} } ]
           }
         });
       });
@@ -193,12 +190,11 @@ describe('mm.route module', function () {
 
     it('should allow optional interpolation parts marked with ?', function () {
       angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            user: {
-              url: '/users/:userId?'
-            }
+          user: {
+            url: '/users/:userId?',
+            access: [ { page: {} } ]
           }
         });
       });
@@ -210,34 +206,15 @@ describe('mm.route module', function () {
       });
     });
 
-    it('should allow retrieval of a route definition by role', function () {
-      angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
-        mmRouteProvider.setRoutes({
-          ADMIN: {
-            settings: {
-              url: '/settings',
-              arbitraryData: 42
-            }
-          }
-        });
-      });
-      angular.mock.inject(function (mmRoute) {
-        var route = mmRoute.getRoute('settings');
-        expect(route.arbitraryData).toEqual(42);
-      });
-    });
-
     // The goTo method uses the built-in Angular $location service to change
     // the URL in the browser
     it('should allow redirection of browser via a goTo method', function () {
       angular.mock.module(function (mmRouteProvider) {
-        mmRouteProvider.setRoles([ 'ADMIN' ]);
+        mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; } );
         mmRouteProvider.setRoutes({
-          ADMIN: {
-            settings: {
-              url: '/settings'
-            }
+          settings: {
+            url: '/settings',
+            access: [ { page: {} } ]
           }
         });
       });
