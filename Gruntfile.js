@@ -89,4 +89,9 @@ module.exports = function (grunt) {
     'uglify',
     'copy'
   ]);
+
+  grunt.registerTask('test', [
+    'karma',
+    'coverage'
+  ]);
 };
