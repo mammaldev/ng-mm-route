@@ -82,10 +82,12 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           settings: {
             url: '/settings',
-            access: [ {
+            access: [ 
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         });
       });
@@ -100,10 +102,12 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           settings: {
             url: '/settings',
-            access: [ {
+            access: [ 
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         });
       });
@@ -122,10 +126,12 @@ describe('mm.route module', function () {
           profile: {
             settings: {
               url: '/settings',
-              access: [ {
+              access: [ 
+                {
                   page: {},
                   roles: ['ALL']
-              } ]
+                }
+              ]
             }
           }
         });
@@ -142,14 +148,14 @@ describe('mm.route module', function () {
           settings: {
             url: '/settings',
             access: [
-            {
+              {
                 page: {},
                 roles: ['ADMIN']
-            },
-            {
+              },
+              {
                 page: {},
                 roles: ['TEACHER']
-            }
+              }
             ]
           }
         });
@@ -168,10 +174,12 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           user: {
             url: '/users/:userId',
-            access: [ {
+            access: [
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         });
       });
@@ -189,10 +197,12 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           user: {
             url: '/users/:user*',
-            access: [ {
+            access: [ 
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         });
       });
@@ -209,10 +219,12 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           user: {
             url: '/users/:userId?',
-            access: [ {
+            access: [
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         });
       });
@@ -232,10 +244,12 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           settings: {
             url: '/settings',
-            access: [ {
+            access: [ 
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         });
       });
@@ -254,10 +268,12 @@ describe('mm.route module', function () {
         expect(mmRoute._parseUrls({
           settings: {
             url: '/settings',
-            access: [ {
+            access: [ 
+              {
                 page: {},
                 roles: [ 'ADMIN' ]
-            } ]
+              }
+            ]
           }
         })).toEqual( 
           [
@@ -271,6 +287,7 @@ describe('mm.route module', function () {
         );
       });
     });
+
     it('should redirect nested routes to role-resolver directive if page is not accessible to all ', function () {
       angular.mock.module(function (mmRouteProvider) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
@@ -280,10 +297,12 @@ describe('mm.route module', function () {
           home: {
             settings: {
               url: '/settings',
-              access: [ {
+              access: [ 
+                {
                   page: {},
                   roles: [ 'ADMIN' ]
-              } ]
+                } 
+              ]
             }
           }
         })).toEqual( 
@@ -298,6 +317,7 @@ describe('mm.route module', function () {
         );
       });
     });
+
     it('should not redirect to role-resolver directive if page is accessible to all ', function () {
       angular.mock.module(function (mmRouteProvider) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
@@ -306,10 +326,12 @@ describe('mm.route module', function () {
         expect(mmRoute._parseUrls({
           settings: {
             url: '/settings',
-            access: [ {
+            access: [ 
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         })).toEqual( 
           [
@@ -321,6 +343,7 @@ describe('mm.route module', function () {
         );
       });
     });
+
     it('should return an array of all provided url objects', function () {
       angular.mock.module(function (mmRouteProvider) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
@@ -330,18 +353,22 @@ describe('mm.route module', function () {
           home: {
             settings: {
               url: '/settings',
-              access: [ {
+              access: [ 
+                {
                   page: {},
                   roles: [ 'ADMIN' ]
-              } ]
+                }
+              ]
             }
           },
           settings: {
             url: '/settings',
-            access: [ {
+            access: [ 
+              {
                 page: {},
                 roles: ['ALL']
-            } ]
+              }
+            ]
           }
         })).toEqual( 
           [
