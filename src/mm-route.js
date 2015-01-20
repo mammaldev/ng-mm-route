@@ -48,29 +48,35 @@ angular.module('mmRoute', [
   // Arguments:
   //   routes    {Object}    Map of roles to route definitions
   //
-  this.setRoutes = function setRoutes( routes ) {
-
-    function parseUrls( urlObj ) {
-
+  this.parseUrls = function parse( urlObj) {
+    var objectKeys = Object.keys(urlObj);
+    if ( objectKeys.length > 0 ) {
       if ( urlObj.hasOwnProperty('url') ) {
         var configObj = {
           url: urlObj.url,
         };
-        if ( urlObj.access.length > 1 ) {
+        if ( urlObj.access.length > 1 || urlObj.access[0].roles[0] !== 'ALL') {
           configObj.routeConf = {
             template: '<body><h1>MANY</h1><role-resolver route=\'' + JSON.stringify(urlObj) + '\'></role-resolver></body>',
           };
         } else {
           configObj.routeConf = urlObj.access[0].page;
         }
-        urlObjects.push(configObj);
+        return [configObj];
       } else {
-        var objectKeys = Object.keys(urlObj);
-        objectKeys.forEach(function ( key ) {
-          parseUrls(urlObj[key]);
-        });
+        if ( objectKeys.length > 0 ) {
+          var objectKey = objectKeys[0];
+          var objAfterKey = urlObj[objectKey];
+          delete urlObj[objectKey];
+          return parse(objAfterKey).concat(parse(urlObj));
+        }
       }
+    } else {
+      return [];
     }
+  };
+
+  this.setRoutes = function setRoutes( routes ) {
 
     // mmRoute provides role-based routing. There's no point using it if you
     // haven't set up the roles first
@@ -81,8 +87,7 @@ angular.module('mmRoute', [
     }
 
     this.routes = routes;
-    var urlObjects = [];
-    parseUrls(routes);
+    var urlObjects = this.parseUrls(angular.copy(routes));
 
     // Set up a route via $routeProvider for each route available to the given
     // role
@@ -165,7 +170,6 @@ angular.module('mmRoute', [
     //
 
     function getRoute( name ) {
-
       var keys = name.split('.');
 
       var urlObject = routes;
@@ -190,7 +194,9 @@ angular.module('mmRoute', [
     return {
       get: get,
       goTo: goTo,
-      getRoute: getRoute
+      getRoute: getRoute,
+      roleGetter: this.roleGetter,
+      _parseUrls: this.parseUrls
     };
 
   } ];
