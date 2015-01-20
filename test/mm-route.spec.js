@@ -494,14 +494,15 @@ describe('mm.route module', function () {
     });
  
     it('should be able to invoke $window when calling getRoles', function () {
-      var $window = { 
+
+      var windowMock = {
         currentUser: {
           roles: ['ADMIN']
         }
       };
       angular.mock.module(function ( mmRouteProvider, $provide ) {
-        $provide.value('$window', $window);
-        mmRouteProvider.setRoleGetter(function () { return $window.currentUser.roles; });
+        $provide.value('$window', windowMock);
+        mmRouteProvider.setRoleGetter(function ( $window ) { return $window.currentUser.roles; });
       });
       angular.mock.inject(function ( roleResolver ) {
         expect(roleResolver.chooseTemplate(
