@@ -64,12 +64,10 @@ angular.module('mmRoute', [
         }
         return [configObj];
       } else {
-        if ( objectKeys.length > 0 ) {
-          var objectKey = objectKeys[0];
-          var objAfterKey = urlObj[objectKey];
-          delete urlObj[objectKey];
-          return parse(objAfterKey).concat(parse(urlObj));
-        }
+        var objectKey = objectKeys[0];
+        var objAfterKey = urlObj[objectKey];
+        delete urlObj[objectKey];
+        return parse(objAfterKey).concat(parse(urlObj));
       }
     } else {
       return [];
