@@ -1,3 +1,4 @@
+
 describe('mm.route module', function () {
 
   var provider;
@@ -512,6 +513,61 @@ describe('mm.route module', function () {
               page: 'admin'
             }
           ])).toEqual('admin');
+      });
+    });
+
+    describe('compiling the template', function () {
+
+      it('should compile without errors ', function () {
+
+        var httpMock = {
+          get: function () {
+            return {
+              then: function ( fun ) {
+                return fun({ data: "data" });
+              }
+            };
+          }
+        };
+
+
+        var controllerMock = angular.noop;
+
+        angular.mock.module(function ( mmRouteProvider, $provide ) {
+          $provide.value('$http', httpMock);
+          $provide.value('$controller', controllerMock);
+          mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; });
+        });
+
+        angular.mock.inject(function ( roleResolver, $compile, $rootScope ) {
+          var element = angular.element('<body><role-resolver route=\'{"url":"/settings","access":[{"page":{"controller":"controller"},"roles":["ADMIN"]}]}\'></role-resolver></body>');
+          var compiled = $compile(element)($rootScope);
+          expect(compiled.children().html()).toEqual('data');
+        });
+      });
+
+      it('should compile without errors without a controller', function () {
+
+        var httpMock = {
+          get: function () {
+            return {
+              then: function ( fun ) {
+                return fun({ data: "data" });
+              }
+            };
+          }
+        };
+
+        angular.mock.module(function ( mmRouteProvider, $provide ) {
+          $provide.value('$http', httpMock);
+          mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; });
+        });
+
+        angular.mock.inject(function ( roleResolver, $compile, $rootScope ) {
+          var element = angular.element('<body><role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></role-resolver></body>');
+          var compiled = $compile(element)($rootScope);
+          expect(compiled.children().html()).toEqual('data');
+        });
       });
     });
   });
