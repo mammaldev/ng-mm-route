@@ -37,7 +37,7 @@ module.exports = function (grunt) {
             'bower_components/angular/angular.js',
             'bower_components/angular-route/angular-route.js',
             'bower_components/angular-mocks/angular-mocks.js',
-            'src/mm-route.js',
+            'src/*.js',
             'test/*.js'
           ],
           coverageReporter: {
