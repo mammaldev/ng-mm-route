@@ -78,7 +78,7 @@ describe('mm.route module', function () {
 
     // Simple (non-nested) routes can be accessed by simply providing the name
     it('should allow the retrieval of URLs', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; } );
         mmRouteProvider.setRoutes({
           settings: {
@@ -92,13 +92,13 @@ describe('mm.route module', function () {
           }
         });
       });
-      angular.mock.inject(function (mmRoute) {
+      angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('settings')).toEqual('/settings');
       });
     });
 
     it('should return undefined for undefined routes', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; } );
         mmRouteProvider.setRoutes({
           settings: {
@@ -112,7 +112,7 @@ describe('mm.route module', function () {
           }
         });
       });
-      angular.mock.inject(function (mmRoute) {
+      angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('profile')).toEqual(undefined);
       });
     });
@@ -161,7 +161,7 @@ describe('mm.route module', function () {
           }
         });
       });
-      angular.mock.inject(function (mmRoute) {
+      angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('settings')).toEqual('/settings');
       });
     });
@@ -170,7 +170,7 @@ describe('mm.route module', function () {
     // provided key. It's case-sensitive and only the first match will be
     // replaced
     it('should allow interpolation of data within URLs', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
           user: {
@@ -184,7 +184,7 @@ describe('mm.route module', function () {
           }
         });
       });
-      angular.mock.inject(function (mmRoute) {
+      angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('user', {
           userId: '12345',
           other: '6789'
@@ -193,7 +193,7 @@ describe('mm.route module', function () {
     });
     
     it('should greedily match interpolated parts marked with *', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
           user: {
@@ -207,7 +207,7 @@ describe('mm.route module', function () {
           }
         });
       });
-      angular.mock.inject(function (mmRoute) {
+      angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('user', {
           userId: '12345'
         })).toEqual('/users/12345');
@@ -215,7 +215,7 @@ describe('mm.route module', function () {
     });
 
     it('should allow optional interpolation parts marked with ?', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
           user: {
@@ -229,7 +229,7 @@ describe('mm.route module', function () {
           }
         });
       });
-      angular.mock.inject(function (mmRoute) {
+      angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('user')).toEqual('/users/');
         expect(mmRoute.get('user', {
           userId: '12345'
@@ -240,7 +240,7 @@ describe('mm.route module', function () {
     // The goTo method uses the built-in Angular $location service to change
     // the URL in the browser
     it('should allow redirection of browser via a goTo method', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; } );
         mmRouteProvider.setRoutes({
           settings: {
@@ -254,15 +254,17 @@ describe('mm.route module', function () {
           }
         });
       });
-      angular.mock.inject(function ($location, mmRoute) {
+      angular.mock.inject(function ( $location, mmRoute ) {
         spyOn($location, 'url');
         mmRoute.goTo('settings');
         expect($location.url).toHaveBeenCalledWith('/settings');
       });
     });
 
+    //If the route that the user wants to access is not accessible to all, the user is directed to a
+    //template containing the role-resolver directive
     it('should redirect to role-resolver directive if page is not accessible to all ', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
       });
       angular.mock.inject(function ( mmRoute ) {
@@ -290,7 +292,7 @@ describe('mm.route module', function () {
     });
 
     it('should redirect nested routes to role-resolver directive if page is not accessible to all ', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
       });
       angular.mock.inject(function ( mmRoute ) {
@@ -319,8 +321,9 @@ describe('mm.route module', function () {
       });
     });
 
+    //If the route is accessible to all, the template associated with that route should be rendered 
     it('should not redirect to role-resolver directive if page is accessible to all ', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
       });
       angular.mock.inject(function ( mmRoute ) {
@@ -346,7 +349,7 @@ describe('mm.route module', function () {
     });
 
     it('should return an array of all provided url objects', function () {
-      angular.mock.module(function (mmRouteProvider) {
+      angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
       });
       angular.mock.inject(function ( mmRoute ) {
@@ -391,14 +394,14 @@ describe('mm.route module', function () {
 
   describe('roleResolver', function() {
 
-
-
     it('should provide an mmRoleResolver service', function () {
       angular.mock.inject(function ( roleResolver ) {
         expect(roleResolver).toBeDefined;
       });
     });
 
+    //The role-resolver is able to determine whether a template can be accessed by a user 
+    //with a particular role
     it('should return true for a role that exists', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
@@ -435,7 +438,8 @@ describe('mm.route module', function () {
       });
     });
 
-    it('should return the role that matches a template', function () {
+    //Role-resolver finds the first template that matches one of the roles of the user
+    it('should return the template that matches a role', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'PUPIL', 'TEACHER' ]; });
       });
@@ -494,6 +498,7 @@ describe('mm.route module', function () {
       });
     });
  
+    //Role-resolver is able to call roleGetter that makes use of the $window service  
     it('should be able to invoke $window when calling getRoles', function () {
 
       var windowMock = {
@@ -516,6 +521,7 @@ describe('mm.route module', function () {
       });
     });
 
+    //Role-resolver is able to compile the template that correpond to the roles of the current user
     describe('compiling the template', function () {
 
       it('should compile without errors ', function () {
@@ -529,7 +535,6 @@ describe('mm.route module', function () {
             };
           }
         };
-
 
         var controllerMock = angular.noop;
 

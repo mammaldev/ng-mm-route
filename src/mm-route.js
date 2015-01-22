@@ -55,18 +55,18 @@ angular.module('mmRoute', [
         var configObj = {
           url: urlObj.url,
         };
-        if ( urlObj.access.length > 1 || urlObj.access[0].roles[0] !== 'ALL') {
+        if ( urlObj.access.length > 1 || urlObj.access[ 0 ].roles[ 0 ] !== 'ALL') {
           configObj.routeConf = {
             template: '<body><h1>MANY</h1><role-resolver route=\'' + JSON.stringify(urlObj) + '\'></role-resolver></body>',
           };
         } else {
-          configObj.routeConf = urlObj.access[0].page;
+          configObj.routeConf = urlObj.access[ 0 ].page;
         }
-        return [configObj];
+        return [ configObj ];
       } else {
-        var objectKey = objectKeys[0];
-        var objAfterKey = urlObj[objectKey];
-        delete urlObj[objectKey];
+        var objectKey = objectKeys[ 0 ];
+        var objAfterKey = urlObj[ objectKey ];
+        delete urlObj[ objectKey ];
         return parse(objAfterKey).concat(parse(urlObj));
       }
     } else {
@@ -91,7 +91,7 @@ angular.module('mmRoute', [
     // role
 
     urlObjects.forEach(function ( urlObject ) {
-      $routeProvider.when(urlObject.url.split('?')[0], urlObject.routeConf);
+      $routeProvider.when(urlObject.url.split('?')[ 0 ], urlObject.routeConf);
     });
 
   };
@@ -172,7 +172,7 @@ angular.module('mmRoute', [
 
       var urlObject = routes;
       keys.forEach(function ( key ) {
-        urlObject = urlObject[key];
+        urlObject = urlObject[ key ];
       });
 
       return urlObject;

@@ -17,7 +17,7 @@ angular.module('mmRoute')
     var chosenTemplate = null;
 
     for ( var i = 0; i < accessObjects.length; i++ ) { 
-      var accessObject = accessObjects[i];
+      var accessObject = accessObjects[ i ];
       if ( accessObject.roles.some(checkTemplatePermission) ) { 
         chosenTemplate = accessObject.page; 
         break;
