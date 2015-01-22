@@ -57,7 +57,7 @@ angular.module('mmRoute', [
         };
         if ( urlObj.access.length > 1 || urlObj.access[ 0 ].roles[ 0 ] !== 'ALL') {
           configObj.routeConf = {
-            template: '<body><h1>MANY</h1><role-resolver route=\'' + JSON.stringify(urlObj) + '\'></role-resolver></body>',
+            template: '<mm-role-resolver route=\'' + JSON.stringify(urlObj) + '\'></mm-role-resolver>',
           };
         } else {
           configObj.routeConf = urlObj.access[ 0 ].page;

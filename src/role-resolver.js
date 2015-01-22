@@ -1,5 +1,5 @@
 angular.module('mmRoute')
-.factory('roleResolver', function ( $window, $injector, mmRoute ) {
+.factory('mmRoleResolver', function ( $window, $injector, mmRoute ) {
   
   function checkTemplatePermission( accessRole ) {
     var roles = $injector.invoke(mmRoute.roleGetter, $window);
@@ -38,14 +38,14 @@ angular.module('mmRoute')
   }; 
 
 })
-.directive('roleResolver', function ( $http, $compile, $templateCache, $controller, mmRoute, roleResolver  ) {
+.directive('mmRoleResolver', function ( $http, $compile, $templateCache, $controller, mmRoute, mmRoleResolver  ) {
   return {
     restrict: 'E',
     scope: {
       route: '=',
     },
     link: function ( scope, element ) {
-      var chosenTemplate = roleResolver.chooseTemplate(scope.route.access);
+      var chosenTemplate = mmRoleResolver.chooseTemplate(scope.route.access);
       var parsedUrl = chosenTemplate.templateUrl;
       var controllerName = chosenTemplate.controller;
 

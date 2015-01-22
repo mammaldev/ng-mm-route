@@ -283,7 +283,7 @@ describe('mm.route module', function () {
             {
               url: '/settings',
               routeConf: {
-                template: '<body><h1>MANY</h1><role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></role-resolver></body>',
+                template: '<mm-role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>',
               }
             }
           ]
@@ -313,7 +313,7 @@ describe('mm.route module', function () {
             { 
               url: '/settings', 
               routeConf: {
-                template: '<body><h1>MANY</h1><role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></role-resolver></body>',
+                template: '<mm-role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>',
               }
             }
           ]
@@ -379,7 +379,7 @@ describe('mm.route module', function () {
             { 
               url: '/settings', 
               routeConf: {
-                template: '<body><h1>MANY</h1><role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></role-resolver></body>',
+                template: '<mm-role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>',
               }
             },
             { 
@@ -395,8 +395,8 @@ describe('mm.route module', function () {
   describe('roleResolver', function() {
 
     it('should provide an mmRoleResolver service', function () {
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver).toBeDefined;
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver).toBeDefined;
       });
     });
 
@@ -406,8 +406,8 @@ describe('mm.route module', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver._checkTemplatePermission('ADMIN')).toEqual(true);
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver._checkTemplatePermission('ADMIN')).toEqual(true);
       });
     });
 
@@ -415,8 +415,8 @@ describe('mm.route module', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver._checkTemplatePermission('PUPIL')).toEqual(false);
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver._checkTemplatePermission('PUPIL')).toEqual(false);
       });
     });
 
@@ -424,8 +424,8 @@ describe('mm.route module', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver._checkTemplatePermission(['ADMIN', 'TEACHER'])).toEqual(true);
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver._checkTemplatePermission(['ADMIN', 'TEACHER'])).toEqual(true);
       });
     });
 
@@ -433,8 +433,8 @@ describe('mm.route module', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'PUPIL', 'TEACHER' ]; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver._checkTemplatePermission(['ADMIN', 'TEACHER'])).toEqual(false);
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver._checkTemplatePermission(['ADMIN', 'TEACHER'])).toEqual(false);
       });
     });
 
@@ -443,8 +443,8 @@ describe('mm.route module', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'PUPIL', 'TEACHER' ]; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver.chooseTemplate(
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver.chooseTemplate(
           [
             {
               roles: ['ADMIN'],
@@ -462,8 +462,8 @@ describe('mm.route module', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver.chooseTemplate(
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver.chooseTemplate(
           [
             {
               roles: ['ADMIN'],
@@ -482,8 +482,8 @@ describe('mm.route module', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ROGUE' ]; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver.chooseTemplate(
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver.chooseTemplate(
           [
             {
               roles: ['ADMIN'],
@@ -510,8 +510,8 @@ describe('mm.route module', function () {
         $provide.value('$window', windowMock);
         mmRouteProvider.setRoleGetter(function ( $window ) { return $window.currentUser.roles; });
       });
-      angular.mock.inject(function ( roleResolver ) {
-        expect(roleResolver.chooseTemplate(
+      angular.mock.inject(function ( mmRoleResolver ) {
+        expect(mmRoleResolver.chooseTemplate(
           [
             {
               roles: ['ADMIN'], 
@@ -544,8 +544,8 @@ describe('mm.route module', function () {
           mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; });
         });
 
-        angular.mock.inject(function ( roleResolver, $compile, $rootScope ) {
-          var element = angular.element('<body><role-resolver route=\'{"url":"/settings","access":[{"page":{"controller":"controller"},"roles":["ADMIN"]}]}\'></role-resolver></body>');
+        angular.mock.inject(function ( mmRoleResolver, $compile, $rootScope ) {
+          var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"page":{"controller":"controller"},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
           var compiled = $compile(element)($rootScope);
           expect(compiled.children().html()).toEqual('data');
         });
@@ -568,8 +568,8 @@ describe('mm.route module', function () {
           mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; });
         });
 
-        angular.mock.inject(function ( roleResolver, $compile, $rootScope ) {
-          var element = angular.element('<body><role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></role-resolver></body>');
+        angular.mock.inject(function ( mmRoleResolver, $compile, $rootScope ) {
+          var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
           var compiled = $compile(element)($rootScope);
           expect(compiled.children().html()).toEqual('data');
         });
