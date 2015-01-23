@@ -4,6 +4,7 @@ An AngularJS module that creates a simple mechanism for robust role-based
 routing. The `mmRoute` module contains a single provider named `mmRouteProvider`
 which in turn provides an `mmRoute` factory.
 
+
 ## Installation
 
 The module is available through Bower. You can install it by running `bower
@@ -38,14 +39,15 @@ Set a URL to which the browser will be redirected when a request is made to the
 root URL. This is useful when your homepage is not found at the root URL. This
 method accepts a single argument which should always be a string.
 
-#### setRoles
+#### setRoleGetter
 
-Example: `mmRouteProvider.setRoles([ 'admin' ])`
+Example: `mmRouteProvider.setRoleGetter(function() { return [ 'admin' ] })`
 
-Set the roles available to the *active user*. Usually you'd get this information
-from the server and output it into your page. The roles available will be used
-to determine which route definition (if any) should be used. This method accepts
-a single argument which should always be an array of strings.
+Set a function that returns the roles available to the *active user*. Usually 
+you'd get this information from the server and output it into your page. The 
+roles available will be used to determine which route definition (if any) should 
+be used. This method accepts a single argument which should always be a function 
+returning an array of strings.
 
 #### setRoutes
 
@@ -57,57 +59,89 @@ more detail on the format of the object.
 
 ## Route definitions
 
-Your route definitions are how you associate a URL with a view (and often a
+Your route definitions describe how you associate a URL with a view (and often a
 controller). The `mmRoute` module makes it easy to add user roles into the
 equation. The object passed to `mmRouteProvider.setRoutes` should have keys
-corresponding to user roles at the top level. Here's an example:
+corresponding to the pages to be accessed at the top level, and an array of 
+roles associated with that page at a lower level. Here's an example:
 
 ```js
 var routes = {
-  admin: {
-    profile: {
-      view: {
-        url: '/admin-profile',
-        templateUrl: '/templates/admin-profile.html'
-      },
-      edit: {
-        url: '/profile/:userId/edit',
-        templateUrl: 'templates/edit-profile.html'
-      }
+  profile: {
+    view: {
+      url: '/profile', 
+      access: [
+        {
+          page: {
+            templateUrl: '/templates/user-profile.html'
+          }, 
+          roles: [
+            'ADMIN'
+          ]
+        }, 
+        {
+          page: {
+            templateUrl: '/templates/user-profile.html'
+          }, 
+          roles: [
+            'USER'
+          ]
+        }
+    }, 
+    edit: {
+      url: '/profile/:userId/edit', 
+      access: [
+        { 
+          page: {
+            templateUrl: '/templates/edit-profile.html'
+          }, 
+          roles: [
+            'ADMIN'
+          ]
+        }
+      ]
     }
-  },
-  user: {
-    signup: {
-      url: '/signup',
-      templateUrl: '/templates/signup.html'
-    },
-    profile: {
-      view: {
-        url: '/profile',
-        templateUrl: '/templates/user-profile.html'
+  }, 
+  signup: {
+    url: '/signup', 
+    access: [
+      {
+        page: {
+          templateUrl: '/signup/'
+        },
+        roles:[
+          'USER'
+        ]
       }
-    }
+    ]
   }
-};
+}
 ```
 
-### Simple route definitions
+### Route definitions
 
-In this example we define two roles of `admin` and `user`. The `signup` route
-under the `user` role is a simple, single-level route definition. If we ask for
-the `signup` route and the active user has the `user` role we will receive the
+In this example we define four pages, `profile.view`, `profile.edit` and 
+`signup`. The access information for these roles is specified in the associated 
+access object. The access object contains a page element, and an array of the 
+roles that are able to access that page. If the role array contains an array of 
+roles instead of a single role, then the user must have both of these roles to 
+be matched with the corresponding page. 
+
+For example, the `signup` route under the `user` role is a simple, single-level 
+route definition. If we ask for the `signup` route and the active user has the 
+`user` role we will receive the relevant route object or URL. The page-element 
+with a role that matches the roles of the user will be matched.
+
+The `profile.view` and `profile.edit` routes demonstrates the ability to group 
+routes under related pieces of business logic. If the active user has the 
+`admin` role and we request the `profile.edit` route, we will receive the 
 relevant route object or URL.
 
-The format of the route definition object itself is identical to that used by
-the [`ngRoute`][ngroute] module. In fact, `mmRoute` relies upon `ngRoute` under
+If a page has the role `ALL` in its roles, then that page is available for all
+users. `ALL` should always be the only element in the roles array.
+
+`mmRoute` relies upon `ngRoute` under
 the hood which means you have a familiar and easy-to-migrate route setup.
-
-### Grouped route definitions
-
-The `profile.view` and `profile.edit` routes under the `admin` role demonstrates
-the ability to group routes under related pieces of business logic. If the
-active user has the `admin` role and we request the `profile.edit` route we will
-receive the relevant route object or URL.
 
 ### Interpolation
 
@@ -124,7 +158,7 @@ methods that can be used to facilitate routing within your app:
 
 #### get
 
-Example: `mmRoute.get('profile.view')`
+Example: `mmRoute.get('profile.view', data)`
 
 Get the URL associated with a given route. Given the route definitions above,
 this call would return `'/admin-profile'` if the active user had the `admin`
@@ -145,19 +179,14 @@ as the second argument to `mmRoute.get`:
 mmRoute.get('profile.edit', { userId: 5 });
 ```
 
-And finally, in the event that a user has multiple roles and you request a route
-that is defined under more than one of those roles, you can specify which role
-should take precedence (note that the role can be the second or third argument,
-depending on whether a data object is specified as the second):
-
-```js
-// Returns '/profile' even if the user has the 'admin' role
-mmRoute.get('profile.view', 'user');
-```
+In the event that a user has multiple roles and you request a route
+that is defined under more than one of those roles, the first page element in the 
+array of page elements
+that has a role matching the roles that the user has will be matched.
 
 #### goTo
 
-Example: `mmRoute.goTo('profile.view')`
+Example: `mmRoute.goTo('profile.view', data)`
 
 Redirect the browser (via the AngularJS `$location` service) to the URL
 associated with the provided route. This method accepts the same arguments as
