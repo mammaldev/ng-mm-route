@@ -185,8 +185,8 @@ angular.module('mmRoute', [
     //   name      {String}    Name of the route; nested names separated by .
     //
 
-    function goTo( name ) {
-      $location.url(get(name));
+    function goTo( name, data ) {
+      $location.url(get(name, data));
     }
 
     return {
