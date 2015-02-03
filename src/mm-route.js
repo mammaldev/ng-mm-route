@@ -3,7 +3,7 @@ angular.module('mmRoute', [
 ])
 .provider('mmRoute', [ '$routeProvider', function ($routeProvider) {
 
-  var interpolation = /:[^\/]+/g;
+  var interpolation = /(:[\w*]+)(\?(?=\/|$))?/g;
   var interpolationMarkers = /[:*?]/g;
   var interpolationOptional = /:[^\/]+\?/g;
 
