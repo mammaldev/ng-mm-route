@@ -83,7 +83,7 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           settings: {
             url: '/settings',
-            access: [ 
+            access: [
               {
                 page: {},
                 roles: ['ALL']
@@ -103,7 +103,7 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           settings: {
             url: '/settings',
-            access: [ 
+            access: [
               {
                 page: {},
                 roles: ['ALL']
@@ -127,7 +127,7 @@ describe('mm.route module', function () {
           profile: {
             settings: {
               url: '/settings',
-              access: [ 
+              access: [
                 {
                   page: {},
                   roles: ['ALL']
@@ -191,14 +191,14 @@ describe('mm.route module', function () {
         })).toEqual('/users/12345');
       });
     });
-    
+
     it('should greedily match interpolated parts marked with *', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
         mmRouteProvider.setRoutes({
           user: {
             url: '/users/:user*',
-            access: [ 
+            access: [
               {
                 page: {},
                 roles: ['ALL']
@@ -245,7 +245,7 @@ describe('mm.route module', function () {
         mmRouteProvider.setRoutes({
           settings: {
             url: '/settings',
-            access: [ 
+            access: [
               {
                 page: {},
                 roles: ['ALL']
@@ -271,14 +271,14 @@ describe('mm.route module', function () {
         expect(mmRoute._parseUrls({
           settings: {
             url: '/settings',
-            access: [ 
+            access: [
               {
                 page: {},
                 roles: [ 'ADMIN' ]
               }
             ]
           }
-        })).toEqual( 
+        })).toEqual(
           [
             {
               url: '/settings',
@@ -300,18 +300,18 @@ describe('mm.route module', function () {
           home: {
             settings: {
               url: '/settings',
-              access: [ 
+              access: [
                 {
                   page: {},
                   roles: [ 'ADMIN' ]
-                } 
+                }
               ]
             }
           }
-        })).toEqual( 
+        })).toEqual(
           [
-            { 
-              url: '/settings', 
+            {
+              url: '/settings',
               routeConf: {
                 template: '<mm-role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>',
               }
@@ -321,7 +321,7 @@ describe('mm.route module', function () {
       });
     });
 
-    //If the route is accessible to all, the template associated with that route should be rendered 
+    //If the route is accessible to all, the template associated with that route should be rendered
     it('should not redirect to role-resolver directive if page is accessible to all ', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN' ]; });
@@ -330,16 +330,16 @@ describe('mm.route module', function () {
         expect(mmRoute._parseUrls({
           settings: {
             url: '/settings',
-            access: [ 
+            access: [
               {
                 page: {},
                 roles: ['ALL']
               }
             ]
           }
-        })).toEqual( 
+        })).toEqual(
           [
-            { 
+            {
               url: '/settings',
               routeConf: {}
             }
@@ -357,7 +357,7 @@ describe('mm.route module', function () {
           home: {
             settings: {
               url: '/settings',
-              access: [ 
+              access: [
                 {
                   page: {},
                   roles: [ 'ADMIN' ]
@@ -367,22 +367,22 @@ describe('mm.route module', function () {
           },
           settings: {
             url: '/settings',
-            access: [ 
+            access: [
               {
                 page: {},
                 roles: ['ALL']
               }
             ]
           }
-        })).toEqual( 
+        })).toEqual(
           [
-            { 
-              url: '/settings', 
+            {
+              url: '/settings',
               routeConf: {
                 template: '<mm-role-resolver route=\'{"url":"/settings","access":[{"page":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>',
               }
             },
-            { 
+            {
               url: '/settings',
               routeConf: {}
             }
@@ -400,7 +400,7 @@ describe('mm.route module', function () {
       });
     });
 
-    //The role-resolver is able to determine whether a template can be accessed by a user 
+    //The role-resolver is able to determine whether a template can be accessed by a user
     //with a particular role
     it('should return true for a role that exists', function () {
       angular.mock.module(function ( mmRouteProvider ) {
@@ -497,8 +497,8 @@ describe('mm.route module', function () {
         ).templateUrl).toEqual('404');
       });
     });
- 
-    //Role-resolver is able to call roleGetter that makes use of the $window service  
+
+    //Role-resolver is able to call roleGetter that makes use of the $window service
     it('should be able to invoke $window when calling getRoles', function () {
 
       var windowMock = {
@@ -514,7 +514,7 @@ describe('mm.route module', function () {
         expect(mmRoleResolver.chooseTemplate(
           [
             {
-              roles: ['ADMIN'], 
+              roles: ['ADMIN'],
               page: 'admin'
             }
           ])).toEqual('admin');
