@@ -396,7 +396,7 @@ describe('mm.route module', function () {
 
     it('should provide an mmRoleResolver service', function () {
       angular.mock.inject(function ( mmRoleResolver ) {
-        expect(mmRoleResolver).toBeDefined;
+        expect(mmRoleResolver).toBeDefined();
       });
     });
 
