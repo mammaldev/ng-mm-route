@@ -171,9 +171,14 @@ angular.module('mmRoute', [
       var keys = name.split('.');
 
       var urlObject = routes;
-      keys.forEach(function ( key ) {
-        urlObject = urlObject[ key ];
-      });
+      for ( var i = 0; i < keys.length; i++ ) {
+        var key = keys[ i ];
+        if ( urlObject.hasOwnProperty(key) ) {
+          urlObject = urlObject[ key ];
+        } else {
+          return null;
+        }
+      }
 
       return urlObject;
     }
