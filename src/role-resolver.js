@@ -25,7 +25,7 @@ angular.module('mmRoute')
     }
 
     if ( !chosenTemplate ) {
-      chosenTemplate = { templateUrl: '404' };
+      throw new Error();
     }
 
     return chosenTemplate;
@@ -38,14 +38,20 @@ angular.module('mmRoute')
   };
 
 })
-.directive('mmRoleResolver', function ( $http, $compile, $templateCache, $controller, mmRoute, mmRoleResolver  ) {
+.directive('mmRoleResolver', function ( $http, $compile, $templateCache, $controller, $location, mmRoute, mmRoleResolver  ) {
   return {
     restrict: 'E',
     scope: {
       route: '=',
     },
     link: function ( scope, element ) {
-      var chosenTemplate = mmRoleResolver.chooseTemplate(scope.route.access);
+      var chosenTemplate;
+      try {
+        chosenTemplate = mmRoleResolver.chooseTemplate(scope.route.access);
+      }
+      catch ( err ) {
+        $location.path('/404');
+      }
       var parsedUrl = chosenTemplate.templateUrl;
       var controllerName = chosenTemplate.controller;
 

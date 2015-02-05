@@ -478,23 +478,25 @@ describe('mm.route module', function () {
       });
     });
 
-    it('should return 404 if no match is found', function () {
+    it('should throw an error if no match is found', function () {
       angular.mock.module(function ( mmRouteProvider ) {
         mmRouteProvider.setRoleGetter(function () { return [ 'ROGUE' ]; });
       });
       angular.mock.inject(function ( mmRoleResolver ) {
-        expect(mmRoleResolver.chooseTemplate(
-          [
-            {
-              roles: ['ADMIN'],
-              page: 'admin'
-            },
-            {
-              roles: ['TEACHER'],
-              page: 'teacher'
-            }
-          ]
-        ).templateUrl).toEqual('404');
+        expect(function () {
+          mmRoleResolver.chooseTemplate(
+            [
+              {
+                roles: ['ADMIN'],
+                page: 'admin'
+              },
+              {
+                roles: ['TEACHER'],
+                page: 'teacher'
+              }
+            ]
+          );
+        }).toThrow();
       });
     });
 
