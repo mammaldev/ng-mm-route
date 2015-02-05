@@ -529,6 +529,49 @@ describe('mm.route module', function () {
       });
     });
 
+    describe('#updateCurrentRoute', function () {
+
+      var routeMock;
+
+      beforeEach(function () {
+        routeMock = {
+          current: {
+            $$route: {}
+          }
+        };
+      });
+
+      it('should copy properties across', function () {
+
+        angular.mock.module(function ( $provide ) {
+          $provide.value('$route', routeMock);
+        });
+
+        angular.mock.inject(function ( mmRoleResolver, $route ) {
+          mmRoleResolver.updateCurrentRoute({
+            abc: 123,
+          });
+          expect($route.current.$$route.abc).toEqual(123);
+        });
+      });
+
+      it('should not override properties already set', function () {
+        routeMock.current.$$route.abc = 'abc';
+
+        angular.mock.module(function ( $provide ) {
+          $provide.value('$route', routeMock);
+        });
+
+        angular.mock.inject(function ( mmRoleResolver, $route ) {
+          mmRoleResolver.updateCurrentRoute({
+            abc: 123,
+          });
+          expect($route.current.$$route.abc).toEqual('abc');
+        });
+      });
+
+    });
+
     //Role-resolver is able to compile the template that correpond to the roles of the current user
     describe('compiling the template', function () {
 

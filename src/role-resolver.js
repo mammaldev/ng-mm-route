@@ -1,5 +1,5 @@
 angular.module('mmRoute')
-.factory('mmRoleResolver', function ( $window, $injector, mmRoute ) {
+.factory('mmRoleResolver', function ( $window, $injector, $route, mmRoute ) {
 
   function checkTemplatePermission( accessRole ) {
     var roles = $injector.invoke(mmRoute.roleGetter, $window);
@@ -32,9 +32,20 @@ angular.module('mmRoute')
 
   }
 
+  function updateCurrentRoute ( chosenTemplate ) {
+    if ( $route.current && chosenTemplate ) {
+      Object.keys(chosenTemplate).forEach(function ( key ) {
+        if ( !$route.current.$$route[ key ] ) {
+          $route.current.$$route[ key ] = chosenTemplate[ key ];
+        }
+      });
+    }
+  }
+
   return {
     chooseTemplate: chooseTemplate,
-    _checkTemplatePermission: checkTemplatePermission
+    updateCurrentRoute: updateCurrentRoute,
+    _checkTemplatePermission: checkTemplatePermission,
   };
 
 })
@@ -52,6 +63,9 @@ angular.module('mmRoute')
       catch ( err ) {
         $location.path('/404');
       }
+
+      mmRoleResolver.updateCurrentRoute(chosenTemplate);
+
       var parsedUrl = chosenTemplate.templateUrl;
       var controllerName = chosenTemplate.controller;
 
