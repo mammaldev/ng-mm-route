@@ -18,6 +18,7 @@ angular.module('mmRoute', [
     $routeProvider.otherwise({
       redirectTo: url
     });
+    this.defaultUrl = url;
   };
 
   //

@@ -55,9 +55,10 @@ describe('mm.route module', function () {
 
     // By setting a default route any request to a URL not otherwise matched to
     // a route should be redirected to the default
-    it('should allow a default route to be defined', function () {
+    it('should allow a default route to be defined', function ( done ) {
       angular.mock.module(function (mmRouteProvider) {
         mmRouteProvider.setDefaultRoute('/404');
+        expect(mmRouteProvider.defaultUrl).toEqual('/404');
       });
       angular.mock.inject(function ($route) {
         expect($route.routes[null].redirectTo).toEqual('/404');
@@ -483,13 +484,12 @@ describe('mm.route module', function () {
         });
       });
 
-      it('should throw an error if no match is found', function () {
+      it('should return null if no match is found', function () {
         angular.mock.module(function ( mmRouteProvider ) {
           mmRouteProvider.setRoleGetter(function () { return [ 'ROGUE' ]; });
         });
         angular.mock.inject(function ( mmRoleResolver ) {
-          expect(function () {
-            mmRoleResolver.chooseView(
+          expect(mmRoleResolver.chooseView(
               [
                 {
                   roles: ['ADMIN'],
@@ -500,8 +500,8 @@ describe('mm.route module', function () {
                   view: 'teacher'
                 }
               ]
-            );
-          }).toThrow();
+            )
+          ).toEqual(null);
         });
       });
 
@@ -575,7 +575,23 @@ describe('mm.route module', function () {
     //Role-resolver is able to compile the template that correpond to the roles of the current user
     describe('compiling the template', function () {
 
-      it('should compile without errors ', function () {
+      it('should redirect to the default url if no view matching roles was found', function () {
+
+        var spy = sinon.spy();
+
+        angular.mock.module(function ( mmRouteProvider, $provide ) {
+          $provide.value('$location', spy);
+          mmRouteProvider.setRoleGetter(function () { return ['USER']; });
+          mmRouteProvider.setDefaultRoute('/default');
+        });
+
+        angular.mock.inject(function ( mmRoleResolver, $compile, $rootScope ) {
+          var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{"controller":"controller"},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
+          expect(spy.calledWith('/default')).toBeTrue;
+        });
+      });
+
+      it('should compile without errors with a valid template', function () {
 
         var httpMock = {
           get: function () {

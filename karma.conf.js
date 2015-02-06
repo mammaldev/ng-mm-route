@@ -4,7 +4,8 @@ module.exports = function(config) {
       'src/*.js': 'coverage'
     },
     frameworks: [
-      'jasmine'
+      'jasmine',
+      'sinon'
     ],
     reporters: [
       'coverage',

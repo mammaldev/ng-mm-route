@@ -24,10 +24,6 @@ angular.module('mmRoute')
       }
     }
 
-    if ( !chosenView ) {
-      throw new Error();
-    }
-
     return chosenView;
 
   }
@@ -56,29 +52,27 @@ angular.module('mmRoute')
       route: '=',
     },
     link: function ( scope, element ) {
-      var chosenView;
-      try {
-        chosenView = mmRoleResolver.chooseView(scope.route.access);
+      var chosenView = mmRoleResolver.chooseView(scope.route.access);
+      if ( !chosenView ) {
+        $location.path(mmRoute.defaultUrl);
+      } else {
+
+        mmRoleResolver.updateCurrentRoute(chosenView);
+
+        var parsedUrl = chosenView.templateUrl;
+        var controllerName = chosenView.controller;
+
+        $http.get(parsedUrl, { cache: $templateCache })
+        .then(function ( template ) {
+          var templateScope = scope.$new();
+          element.html(template.data);
+          if ( controllerName ) {
+            var templateCtrl = $controller(controllerName, { $scope: templateScope });
+            element.children().data('$ngControllerController', templateCtrl);
+          }
+          $compile(element.contents())(templateScope);
+        });
       }
-      catch ( err ) {
-        $location.path('/404');
-      }
-
-      mmRoleResolver.updateCurrentRoute(chosenView);
-
-      var parsedUrl = chosenView.templateUrl;
-      var controllerName = chosenView.controller;
-
-      $http.get(parsedUrl, { cache: $templateCache })
-      .then(function ( template ) {
-        var templateScope = scope.$new();
-        element.html(template.data);
-        if ( controllerName ) {
-          var templateCtrl = $controller(controllerName, { $scope: templateScope });
-          element.children().data('$ngControllerController', templateCtrl);
-        }
-        $compile(element.contents())(templateScope);
-      });
     }
   };
 });
