@@ -43,10 +43,10 @@ angular.module('mmRoute', [
   };
 
   //
-  // Set the routes available throughout the app
+  // Parses urls so that routes can be applied
   //
   // Arguments:
-  //   routes    {Object}    Map of roles to route definitions
+  //   routes    {Object}    Urls with matching access objects
   //
   this.parseUrls = function parse( urlObj) {
     var objectKeys = Object.keys(urlObj);
@@ -87,8 +87,7 @@ angular.module('mmRoute', [
     this.routes = routes;
     var urlObjects = this.parseUrls(angular.copy(routes));
 
-    // Set up a route via $routeProvider for each route available to the given
-    // role
+    // Set up a route via $routeProvider for each route
 
     urlObjects.forEach(function ( urlObject ) {
       $routeProvider.when(urlObject.url.split('?')[ 0 ], urlObject.routeConf);
@@ -110,7 +109,6 @@ angular.module('mmRoute', [
     //   [data]    {Object}    A map of route paramater names to data
 
     function get( name, data ) {
-    /*jshint devel: true */
 
       // Get the matching route definition
       var route = getRoute(name);
@@ -188,6 +186,7 @@ angular.module('mmRoute', [
     //
     // Arguments:
     //   name      {String}    Name of the route; nested names separated by .
+    //   [data]    {Object}    A map of route paramater names to data
     //
 
     function goTo( name, data ) {
