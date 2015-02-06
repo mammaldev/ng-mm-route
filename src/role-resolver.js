@@ -1,7 +1,7 @@
 angular.module('mmRoute')
 .factory('mmRoleResolver', function ( $window, $injector, $route, mmRoute ) {
 
-  function checkTemplatePermission( accessRole ) {
+  function checkViewPermission( accessRole ) {
     var roles = $injector.invoke(mmRoute.roleGetter, $window);
 
     if ( !Array.isArray(accessRole) ) {
@@ -13,39 +13,39 @@ angular.module('mmRoute')
     }
   }
 
-  function chooseTemplate( accessObjects ) {
-    var chosenTemplate = null;
+  function chooseView( accessObjects ) {
+    var chosenView = null;
 
     for ( var i = 0; i < accessObjects.length; i++ ) {
       var accessObject = accessObjects[ i ];
-      if ( accessObject.roles.some(checkTemplatePermission) ) {
-        chosenTemplate = accessObject.page;
+      if ( accessObject.roles.some(checkViewPermission) ) {
+        chosenView = accessObject.view;
         break;
       }
     }
 
-    if ( !chosenTemplate ) {
+    if ( !chosenView ) {
       throw new Error();
     }
 
-    return chosenTemplate;
+    return chosenView;
 
   }
 
-  function updateCurrentRoute ( chosenTemplate ) {
-    if ( $route.current && chosenTemplate ) {
-      Object.keys(chosenTemplate).forEach(function ( key ) {
+  function updateCurrentRoute ( chosenView ) {
+    if ( $route.current && chosenView ) {
+      Object.keys(chosenView).forEach(function ( key ) {
         if ( !$route.current.$$route[ key ] ) {
-          $route.current.$$route[ key ] = chosenTemplate[ key ];
+          $route.current.$$route[ key ] = chosenView[ key ];
         }
       });
     }
   }
 
   return {
-    chooseTemplate: chooseTemplate,
+    chooseView: chooseView,
     updateCurrentRoute: updateCurrentRoute,
-    _checkTemplatePermission: checkTemplatePermission,
+    _checkViewPermission: checkViewPermission,
   };
 
 })
@@ -56,18 +56,18 @@ angular.module('mmRoute')
       route: '=',
     },
     link: function ( scope, element ) {
-      var chosenTemplate;
+      var chosenView;
       try {
-        chosenTemplate = mmRoleResolver.chooseTemplate(scope.route.access);
+        chosenView = mmRoleResolver.chooseView(scope.route.access);
       }
       catch ( err ) {
         $location.path('/404');
       }
 
-      mmRoleResolver.updateCurrentRoute(chosenTemplate);
+      mmRoleResolver.updateCurrentRoute(chosenView);
 
-      var parsedUrl = chosenTemplate.templateUrl;
-      var controllerName = chosenTemplate.controller;
+      var parsedUrl = chosenView.templateUrl;
+      var controllerName = chosenView.controller;
 
       $http.get(parsedUrl, { cache: $templateCache })
       .then(function ( template ) {

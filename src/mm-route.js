@@ -60,7 +60,7 @@ angular.module('mmRoute', [
             template: '<mm-role-resolver route=\'' + JSON.stringify(urlObj) + '\'></mm-role-resolver>'
           };
         } else {
-          configObj.routeConf = urlObj.access[ 0 ].page;
+          configObj.routeConf = urlObj.access[ 0 ].view;
         }
         return [ configObj ];
       } else {
