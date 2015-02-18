@@ -595,7 +595,7 @@ describe('mm.route module', function () {
           get: function () {
             return {
               then: function ( fun ) {
-                return fun({ data: "data" });
+                return fun({ data: 'data' });
               }
             };
           }
@@ -622,7 +622,7 @@ describe('mm.route module', function () {
           get: function () {
             return {
               then: function ( fun ) {
-                return fun({ data: "data" });
+                return fun({ data: 'data' });
               }
             };
           }
