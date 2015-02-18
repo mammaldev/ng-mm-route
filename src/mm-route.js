@@ -49,7 +49,8 @@ angular.module('mmRoute', [
   // Arguments:
   //   routes    {Object}    Urls with matching access objects
   //
-  this.parseUrls = function parseUrls( urlObj ) {
+  this.parseUrls = function parseUrls( urlObj, path ) {
+    path = path || [];
     var objectKeys = Object.keys(urlObj);
     if ( objectKeys.length > 0 ) {
       if ( urlObj.hasOwnProperty('url') ) {
@@ -58,7 +59,7 @@ angular.module('mmRoute', [
         };
         if ( urlObj.access.length > 1 || urlObj.access[ 0 ].roles[ 0 ] !== 'ALL' ) {
           configObj.routeConf = {
-            template: '<mm-role-resolver route=\'' + JSON.stringify(urlObj) + '\'></mm-role-resolver>'
+            template: '<mm-role-resolver route-path="' + path.join('.') + '"></mm-role-resolver>'
           };
         } else {
           configObj.routeConf = urlObj.access[ 0 ].view;
@@ -68,7 +69,7 @@ angular.module('mmRoute', [
         var objectKey = objectKeys[ 0 ];
         var objAfterKey = urlObj[ objectKey ];
         delete urlObj[ objectKey ];
-        return parseUrls(objAfterKey).concat(parseUrls(urlObj));
+        return parseUrls(objAfterKey, path.concat([ objectKey ])).concat(parseUrls(urlObj, path));
       }
     } else {
       return [];

@@ -49,9 +49,10 @@ angular.module('mmRoute')
   return {
     restrict: 'E',
     scope: {
-      route: '=',
+      routePath: '@',
     },
     link: function ( scope, element ) {
+      scope.route = mmRoute.getRoute(scope.routePath);
       var chosenView = mmRoleResolver.chooseView(scope.route.access);
       if ( !chosenView ) {
         $location.path(mmRoute.defaultUrl);
