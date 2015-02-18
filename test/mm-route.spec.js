@@ -577,17 +577,17 @@ describe('mm.route module', function () {
 
       it('should redirect to the default url if no view matching roles was found', function () {
 
-        var spy = sinon.spy();
-
-        angular.mock.module(function ( mmRouteProvider, $provide ) {
-          $provide.value('$location', spy);
+        angular.mock.module(function ( mmRouteProvider ) {
           mmRouteProvider.setRoleGetter(function () { return ['USER']; });
           mmRouteProvider.setDefaultRoute('/default');
         });
 
-        angular.mock.inject(function ( mmRoleResolver, $compile, $rootScope ) {
+        angular.mock.inject(function ( mmRoleResolver, $compile, $rootScope, $location ) {
+          $location.path('/settings');
           var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{"controller":"controller"},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
-          expect(spy.calledWith('/default')).toBeTrue;
+          $compile(element)($rootScope);
+          $rootScope.$digest();
+          expect($location.path()).toBe('/default');
         });
       });
 
