@@ -730,6 +730,54 @@ describe('mm.route module', function () {
           expect(compiled.children().html()).to.equal('template string');
         });
       });
+
+      it('should throw an error with an invalid template url', function () {
+
+        var httpMock = {
+          get: function () {
+            return {
+              success: function () {
+                return {
+                  error: function(fun) {
+                    fun(new Error('404 not found'));
+                  }
+                };
+              }
+            };
+          }
+        };
+
+        var routes = {
+          templateUrlRoute: {
+            home: {
+              url: '/template-url-route/',
+              access: [
+                {
+                  view: {
+                    templateUrl: '/url.html'
+                  },
+                  roles: [ 'USER' ]
+                }
+              ]
+            }
+          }
+        };
+
+        angular.mock.module(function (mmRouteProvider, $provide) {
+          $provide.value('$http', httpMock);
+          mmRouteProvider.setRoleGetter(function () { return ['USER']; });
+          mmRouteProvider.setDefaultRoute('/default');
+          mmRouteProvider.setRoutes(routes);
+        });
+
+        angular.mock.inject(function (mmRoleResolver, $compile, $rootScope) {
+          var element = angular.element('<mm-role-resolver route-path="templateUrlRoute.home"></mm-role-resolver>');
+          $compile(element)($rootScope);
+          expect(
+            $rootScope.$digest.bind($rootScope)
+          ).to.throw(Error, /404 not found/);
+        });
+      });
     });
   });
 });
