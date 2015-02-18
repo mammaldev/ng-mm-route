@@ -60,7 +60,8 @@ describe('mm.route module', function () {
         mmRouteProvider.setDefaultRoute('/404');
         expect(mmRouteProvider.defaultUrl).to.equal('/404');
       });
-      angular.mock.inject(function ($route) {
+      angular.mock.inject(function ($route, mmRoute) {
+        expect(mmRoute.defaultUrl).to.equal('/404');
         expect($route.routes[null].redirectTo).to.equal('/404');
       });
     });

@@ -199,6 +199,7 @@ angular.module('mmRoute', [
       goTo: goTo,
       getRoute: getRoute,
       roleGetter: this.roleGetter,
+      defaultUrl: this.defaultUrl,
       _parseUrls: this.parseUrls
     };
 
