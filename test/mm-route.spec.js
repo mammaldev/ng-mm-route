@@ -571,8 +571,8 @@ describe('mm.route module', function () {
 
     });
 
-    // Role-resolver is able to compile the template that correpond to the roles of the current user
-    describe('compiling the template', function () {
+    // Role-resolver is able to execute the view that correponds to the roles of the current user
+    describe('execute the view', function () {
 
       it('should redirect to the default url if no view matching roles was found', function () {
 
