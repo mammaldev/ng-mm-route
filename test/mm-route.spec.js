@@ -22,7 +22,7 @@ describe('mm.route module', function () {
 
     it('should provide an mmRoute service', function () {
       angular.mock.inject(function (mmRoute) {
-        expect(mmRoute).toBeDefined();
+        expect(mmRoute).to.not.equal(void 0);
       });
     });
 
@@ -41,12 +41,12 @@ describe('mm.route module', function () {
           return mmRoute;
         });
       }
-      expect(test).toThrow();
+      expect(test).to.throw();
     });
 
     methods.forEach(function (method) {
       it('should have a ' + method + ' method', function () {
-        expect(provider[method]).toEqual(jasmine.any(Function));
+        expect(typeof provider[method]).to.equal('function');
       });
     });
   });
@@ -58,10 +58,10 @@ describe('mm.route module', function () {
     it('should allow a default route to be defined', function () {
       angular.mock.module(function (mmRouteProvider) {
         mmRouteProvider.setDefaultRoute('/404');
-        expect(mmRouteProvider.defaultUrl).toEqual('/404');
+        expect(mmRouteProvider.defaultUrl).to.equal('/404');
       });
       angular.mock.inject(function ($route) {
-        expect($route.routes[null].redirectTo).toEqual('/404');
+        expect($route.routes[null].redirectTo).to.equal('/404');
       });
     });
 
@@ -72,10 +72,9 @@ describe('mm.route module', function () {
         mmRouteProvider.setBaseRoute('/home');
       });
       angular.mock.inject(function ($route) {
-        expect($route.routes['/'].redirectTo).toEqual('/home');
+        expect($route.routes['/'].redirectTo).to.equal('/home');
       });
     });
-
 
     // Simple (non-nested) routes can be accessed by simply providing the name
     it('should allow the retrieval of URLs', function () {
@@ -94,7 +93,7 @@ describe('mm.route module', function () {
         });
       });
       angular.mock.inject(function ( mmRoute ) {
-        expect(mmRoute.get('settings')).toEqual('/settings');
+        expect(mmRoute.get('settings')).to.equal('/settings');
       });
     });
 
@@ -114,10 +113,9 @@ describe('mm.route module', function () {
         });
       });
       angular.mock.inject(function ( mmRoute ) {
-        expect(mmRoute.get('profile')).toEqual(undefined);
+        expect(mmRoute.get('profile')).to.equal(undefined);
       });
     });
-
 
     // Nested routes are accessed by concatenating the names with '.', as if
     // you were accessing the property in code directly
@@ -139,7 +137,7 @@ describe('mm.route module', function () {
         });
       });
       angular.mock.inject(function ( mmRoute ) {
-        expect(mmRoute.get('profile.settings')).toEqual('/settings');
+        expect(mmRoute.get('profile.settings')).to.equal('/settings');
       });
     });
 
@@ -163,7 +161,7 @@ describe('mm.route module', function () {
         });
       });
       angular.mock.inject(function ( mmRoute ) {
-        expect(mmRoute.get('settings')).toEqual('/settings');
+        expect(mmRoute.get('settings')).to.equal('/settings');
       });
     });
 
@@ -189,7 +187,7 @@ describe('mm.route module', function () {
         expect(mmRoute.get('user', {
           userId: '12345',
           other: '6789'
-        })).toEqual('/users/12345');
+        })).to.equal('/users/12345');
       });
     });
 
@@ -211,7 +209,7 @@ describe('mm.route module', function () {
       angular.mock.inject(function ( mmRoute ) {
         expect(mmRoute.get('user', {
           userId: '12345'
-        })).toEqual('/users/12345');
+        })).to.equal('/users/12345');
       });
     });
 
@@ -231,10 +229,10 @@ describe('mm.route module', function () {
         });
       });
       angular.mock.inject(function ( mmRoute ) {
-        expect(mmRoute.get('user')).toEqual('/users/');
+        expect(mmRoute.get('user')).to.equal('/users/');
         expect(mmRoute.get('user', {
           userId: '12345'
-        })).toEqual('/users/12345');
+        })).to.equal('/users/12345');
       });
     });
 
@@ -256,9 +254,9 @@ describe('mm.route module', function () {
         });
       });
       angular.mock.inject(function ( $location, mmRoute ) {
-        spyOn($location, 'url');
+        sinon.spy($location, 'url');
         mmRoute.goTo('settings');
-        expect($location.url).toHaveBeenCalledWith('/settings');
+        expect($location.url.calledWith('/settings')).to.equal(true);
       });
     });
 
@@ -279,7 +277,7 @@ describe('mm.route module', function () {
               }
             ]
           }
-        })).toEqual(
+        })).to.deep.equal(
           [
             {
               url: '/settings',
@@ -309,7 +307,7 @@ describe('mm.route module', function () {
               ]
             }
           }
-        })).toEqual(
+        })).to.deep.equal(
           [
             {
               url: '/settings',
@@ -338,7 +336,7 @@ describe('mm.route module', function () {
               }
             ]
           }
-        })).toEqual(
+        })).to.deep.equal(
           [
             {
               url: '/settings',
@@ -375,7 +373,7 @@ describe('mm.route module', function () {
               }
             ]
           }
-        })).toEqual(
+        })).to.deep.equal(
           [
             {
               url: '/settings',
@@ -397,20 +395,20 @@ describe('mm.route module', function () {
 
     it('should provide an mmRoleResolver service', function () {
       angular.mock.inject(function ( mmRoleResolver ) {
-        expect(mmRoleResolver).toBeDefined();
+        expect(mmRoleResolver).to.not.equal(void 0);
       });
     });
 
     describe('#_checkViewPermission', function () {
 
-      //The role-resolver is able to determine whether a view can be accessed by a user
-      //with a particular role
+      // The role-resolver is able to determine whether a view can be accessed by a user
+      // with a particular role
       it('should return true for a role that exists', function () {
         angular.mock.module(function ( mmRouteProvider ) {
           mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
         });
         angular.mock.inject(function ( mmRoleResolver ) {
-          expect(mmRoleResolver._checkViewPermission('ADMIN')).toEqual(true);
+          expect(mmRoleResolver._checkViewPermission('ADMIN')).to.equal(true);
         });
       });
 
@@ -419,7 +417,7 @@ describe('mm.route module', function () {
           mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
         });
         angular.mock.inject(function ( mmRoleResolver ) {
-          expect(mmRoleResolver._checkViewPermission('PUPIL')).toEqual(false);
+          expect(mmRoleResolver._checkViewPermission('PUPIL')).to.equal(false);
         });
       });
 
@@ -428,7 +426,7 @@ describe('mm.route module', function () {
           mmRouteProvider.setRoleGetter(function () { return [ 'ADMIN', 'TEACHER' ]; });
         });
         angular.mock.inject(function ( mmRoleResolver ) {
-          expect(mmRoleResolver._checkViewPermission(['ADMIN', 'TEACHER'])).toEqual(true);
+          expect(mmRoleResolver._checkViewPermission(['ADMIN', 'TEACHER'])).to.equal(true);
         });
       });
 
@@ -437,14 +435,14 @@ describe('mm.route module', function () {
           mmRouteProvider.setRoleGetter(function () { return [ 'PUPIL', 'TEACHER' ]; });
         });
         angular.mock.inject(function ( mmRoleResolver ) {
-          expect(mmRoleResolver._checkViewPermission(['ADMIN', 'TEACHER'])).toEqual(false);
+          expect(mmRoleResolver._checkViewPermission(['ADMIN', 'TEACHER'])).to.equal(false);
         });
       });
 
     });
 
     describe('#chooseView', function () {
-      //Role-resolver finds the first view that matches one of the roles of the user
+      // Role-resolver finds the first view that matches one of the roles of the user
       it('should return the view that matches a role', function () {
         angular.mock.module(function ( mmRouteProvider ) {
           mmRouteProvider.setRoleGetter(function () { return [ 'PUPIL', 'TEACHER' ]; });
@@ -460,7 +458,7 @@ describe('mm.route module', function () {
                 roles: ['TEACHER'],
                 view: 'teacher'}
              ]
-          )).toEqual('teacher');
+          )).to.equal('teacher');
         });
       });
 
@@ -480,7 +478,7 @@ describe('mm.route module', function () {
                 view: 'teacher'
               }
             ]
-          )).toEqual('admin');
+          )).to.equal('admin');
         });
       });
 
@@ -501,11 +499,11 @@ describe('mm.route module', function () {
                 }
               ]
             )
-          ).toEqual(null);
+          ).to.equal(null);
         });
       });
 
-      //Role-resolver is able to call roleGetter that makes use of the $window service
+      // Role-resolver is able to call roleGetter that makes use of the $window service
       it('should be able to invoke $window when calling getRoles', function () {
 
         var windowMock = {
@@ -524,7 +522,7 @@ describe('mm.route module', function () {
                 roles: ['ADMIN'],
                 view: 'admin'
               }
-            ])).toEqual('admin');
+            ])).to.equal('admin');
         });
       });
     });
@@ -551,7 +549,7 @@ describe('mm.route module', function () {
           mmRoleResolver.updateCurrentRoute({
             abc: 123,
           });
-          expect($route.current.$$route.abc).toEqual(123);
+          expect($route.current.$$route.abc).to.equal(123);
         });
       });
 
@@ -566,13 +564,13 @@ describe('mm.route module', function () {
           mmRoleResolver.updateCurrentRoute({
             abc: 123,
           });
-          expect($route.current.$$route.abc).toEqual('abc');
+          expect($route.current.$$route.abc).to.equal('abc');
         });
       });
 
     });
 
-    //Role-resolver is able to compile the template that correpond to the roles of the current user
+    // Role-resolver is able to compile the template that correpond to the roles of the current user
     describe('compiling the template', function () {
 
       it('should redirect to the default url if no view matching roles was found', function () {
@@ -587,7 +585,7 @@ describe('mm.route module', function () {
           var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{"controller":"controller"},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
           $compile(element)($rootScope);
           $rootScope.$digest();
-          expect($location.path()).toBe('/default');
+          expect($location.path()).to.equal('/default');
         });
       });
 
@@ -614,7 +612,7 @@ describe('mm.route module', function () {
         angular.mock.inject(function ( mmRoleResolver, $compile, $rootScope ) {
           var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{"controller":"controller"},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
           var compiled = $compile(element)($rootScope);
-          expect(compiled.children().html()).toEqual('data');
+          expect(compiled.children().html()).to.equal('data');
         });
       });
 
@@ -638,7 +636,7 @@ describe('mm.route module', function () {
         angular.mock.inject(function ( mmRoleResolver, $compile, $rootScope ) {
           var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
           var compiled = $compile(element)($rootScope);
-          expect(compiled.children().html()).toEqual('data');
+          expect(compiled.children().html()).to.equal('data');
         });
       });
     });
