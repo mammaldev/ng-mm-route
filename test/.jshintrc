@@ -21,6 +21,7 @@
     "describe": false,
     "expect": false,
     "spyOn": false,
+    "sinon": false,
     "it": false
   }
 }
