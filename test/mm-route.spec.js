@@ -55,7 +55,7 @@ describe('mm.route module', function () {
 
     // By setting a default route any request to a URL not otherwise matched to
     // a route should be redirected to the default
-    it('should allow a default route to be defined', function ( done ) {
+    it('should allow a default route to be defined', function () {
       angular.mock.module(function (mmRouteProvider) {
         mmRouteProvider.setDefaultRoute('/404');
         expect(mmRouteProvider.defaultUrl).toEqual('/404');
