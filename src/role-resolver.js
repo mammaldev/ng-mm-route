@@ -45,7 +45,7 @@ angular.module('mmRoute')
   };
 
 })
-.directive('mmRoleResolver', function ( $http, $compile, $templateCache, $controller, $location, mmRoute, mmRoleResolver  ) {
+.directive('mmRoleResolver', function ( $http, $compile, $templateCache, $controller, $location, $q, mmRoute, mmRoleResolver  ) {
   return {
     restrict: 'E',
     scope: {
@@ -59,18 +59,29 @@ angular.module('mmRoute')
 
         mmRoleResolver.updateCurrentRoute(chosenView);
 
-        var parsedUrl = chosenView.templateUrl;
         var controllerName = chosenView.controller;
 
-        $http.get(parsedUrl, { cache: $templateCache })
+        var deferred = $q.defer();
+        if ( chosenView.templateUrl ) {
+          $http.get(chosenView.templateUrl, { cache: $templateCache })
+          .success(deferred.resolve.bind(deferred))
+          .error(deferred.reject.bind(deferred));
+        } else {
+          deferred.resolve(chosenView.template || '');
+        }
+
+        deferred.promise
         .then(function ( template ) {
           var templateScope = scope.$new();
-          element.html(template.data);
+          element.html(template);
           if ( controllerName ) {
             var templateCtrl = $controller(controllerName, { $scope: templateScope });
             element.children().data('$ngControllerController', templateCtrl);
           }
           $compile(element.contents())(templateScope);
+        })
+        .catch(function ( err ) {
+          throw err;
         });
       }
     }

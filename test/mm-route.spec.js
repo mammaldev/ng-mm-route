@@ -590,13 +590,95 @@ describe('mm.route module', function () {
         });
       });
 
-      it('should compile without errors with a valid template', function () {
+      it('should allow for string templates', function () {
+        var routes = {
+          controllerRoute: {
+            home: {
+              url: '/controller-route/',
+              access: [
+                {
+                  view: {
+                    template: '<h1>string template</h1>'
+                  },
+                  roles: [ 'USER' ]
+                }
+              ]
+            }
+          }
+        };
+        angular.mock.module(function (mmRouteProvider) {
+          mmRouteProvider.setRoleGetter(function () { return ['USER']; });
+          mmRouteProvider.setDefaultRoute('/default');
+          mmRouteProvider.setRoutes(routes);
+        });
+
+        angular.mock.inject(function (mmRoleResolver, $compile, $rootScope, $location) {
+          $location.path('/controller-route/');
+          var element = angular.element('<mm-role-resolver route=\'' + JSON.stringify(routes.controllerRoute.home) + '\'></mm-role-resolver>');
+          var template = $compile(element)($rootScope);
+          $rootScope.$digest();
+          expect(template.html()).to.equal('<h1 class="ng-scope">string template</h1>');
+        });
+      });
+
+      // it('should execute custom controller code', function () {
+
+      //   angular.mock.module(function (mmRouteProvider) {
+      //     mmRouteProvider.setRoleGetter(function () { return ['USER']; });
+      //     mmRouteProvider.setDefaultRoute('/default');
+      //     mmRouteProvider.setRoutes({
+      //       controllerRoute: {
+      //         home: {
+      //           url: '/controller-route/',
+      //           access: [
+      //             {
+      //               view: {
+      //                 controller: function ( mmRoute ) {
+      //                   console.log('hello');
+      //                   mmRoute.goTo('otherRoute');
+      //                 },
+      //                 template: ''
+      //               },
+      //               roles: [ 'USER' ]
+      //             }
+      //           ]
+      //         }
+      //       },
+      //       otherRoute: {
+      //         url: '/other-route/',
+      //         access: [
+      //           {
+      //             view: {
+      //               template: 'hello'
+      //             },
+      //             roles: [ 'USER' ]
+      //           }
+      //         ]
+      //       }
+      //     });
+      //   });
+
+      //   angular.mock.inject(function (mmRoleResolver, $compile, $rootScope, $location, $route) {
+      //     $location.path('/controller-route/');
+      //     var element = angular.element('<mm-role-resolver route-path=\'controllerRoute.home\'></mm-role-resolver>');
+      //     $compile(element)($rootScope);
+      //     $rootScope.$digest();
+      //     console.log('final route', $route.current.$$route);
+      //     console.log('final path', $location.path());
+      //     expect($location.path()).to.equal('/other-route/');
+      //   });
+      // });
+
+      it('should compile without errors with a valid template url', function () {
 
         var httpMock = {
           get: function () {
             return {
-              then: function (fun) {
-                return fun({ data: 'data' });
+              success: function (fun) {
+                fun('template string');
+                return {
+                  error: function() {}
+                };
               }
             };
           }
@@ -611,33 +693,10 @@ describe('mm.route module', function () {
         });
 
         angular.mock.inject(function (mmRoleResolver, $compile, $rootScope) {
-          var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{"controller":"controller"},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
+          var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{"templateUrl":"/template/url.html"},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
           var compiled = $compile(element)($rootScope);
-          expect(compiled.children().html()).to.equal('data');
-        });
-      });
-
-      it('should compile without errors without a controller', function () {
-
-        var httpMock = {
-          get: function () {
-            return {
-              then: function (fun) {
-                return fun({ data: 'data' });
-              }
-            };
-          }
-        };
-
-        angular.mock.module(function (mmRouteProvider, $provide) {
-          $provide.value('$http', httpMock);
-          mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; });
-        });
-
-        angular.mock.inject(function (mmRoleResolver, $compile, $rootScope) {
-          var element = angular.element('<mm-role-resolver route=\'{"url":"/settings","access":[{"view":{},"roles":["ADMIN"]}]}\'></mm-role-resolver>');
-          var compiled = $compile(element)($rootScope);
-          expect(compiled.children().html()).to.equal('data');
+          $rootScope.$digest();
+          expect(compiled.children().html()).to.equal('template string');
         });
       });
     });
