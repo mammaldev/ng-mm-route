@@ -48,6 +48,7 @@ angular.module('mmRoute')
 .directive('mmRoleResolver', function ( $http, $compile, $templateCache, $controller, $location, $q, mmRoute, mmRoleResolver  ) {
   return {
     restrict: 'E',
+    replace: true,
     scope: {
       routePath: '@',
     },
