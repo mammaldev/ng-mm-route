@@ -72,7 +72,7 @@ var routes = {
       url: '/profile', 
       access: [
         {
-          page: {
+          view: {
             templateUrl: '/templates/user-profile.html'
           }, 
           roles: [
@@ -80,7 +80,7 @@ var routes = {
           ]
         }, 
         {
-          page: {
+          view: {
             templateUrl: '/templates/user-profile.html'
           }, 
           roles: [
@@ -92,7 +92,7 @@ var routes = {
       url: '/profile/:userId/edit', 
       access: [
         { 
-          page: {
+          view: {
             templateUrl: '/templates/edit-profile.html'
           }, 
           roles: [
@@ -106,7 +106,7 @@ var routes = {
     url: '/signup', 
     access: [
       {
-        page: {
+        view: {
           templateUrl: '/signup/'
         },
         roles:[
