@@ -392,6 +392,29 @@ describe('mm.route module', function () {
         );
       });
     });
+
+    // All routes can be accessed
+    it('should allow the retrieval of routes', function () {
+      var ALL_ROUTES = {
+        settings: {
+          url: '/settings',
+          access: [
+            {
+              view: {},
+              roles: ['ALL']
+            }
+          ]
+        }
+      };
+      angular.mock.module(function (mmRouteProvider) {
+        mmRouteProvider.setRoleGetter(function () { return ['ADMIN']; } );
+        mmRouteProvider.setRoutes(ALL_ROUTES);
+      });
+      angular.mock.inject(function (mmRoute) {
+        expect(mmRoute.getRoutes()).to.deep.equal(ALL_ROUTES);
+      });
+    });
+
   });
 
   describe('roleResolver', function() {
