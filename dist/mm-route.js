@@ -195,10 +195,15 @@ angular.module('mmRoute', [
       $location.url(get(name, data));
     }
 
+    function getRoutes() {
+      return routes;
+    }
+
     return {
       get: get,
       goTo: goTo,
       getRoute: getRoute,
+      getRoutes: getRoutes,
       roleGetter: this.roleGetter,
       defaultUrl: this.defaultUrl,
       _parseUrls: this.parseUrls
