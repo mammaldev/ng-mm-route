@@ -594,6 +594,35 @@ describe('mm.route module', function () {
         });
       });
 
+      it('should override reloadOnSearch property when it is already set', function () {
+        routeMock.current.$$route.reloadOnSearch = true;
+
+        angular.mock.module(function ($provide) {
+          $provide.value('$route', routeMock);
+        });
+
+        angular.mock.inject(function (mmRoleResolver, $route) {
+          mmRoleResolver.updateCurrentRoute({
+            reloadOnSearch: false,
+          });
+          expect($route.current.$$route.reloadOnSearch).to.equal(false);
+        });
+      });
+
+      it('should override caseInsensitiveMatch property when it is already set', function () {
+        routeMock.current.$$route.caseInsensitiveMatch = true;
+
+        angular.mock.module(function ($provide) {
+          $provide.value('$route', routeMock);
+        });
+
+        angular.mock.inject(function (mmRoleResolver, $route) {
+          mmRoleResolver.updateCurrentRoute({
+            caseInsensitiveMatch: false,
+          });
+          expect($route.current.$$route.caseInsensitiveMatch).to.equal(false);
+        });
+      });
     });
 
     // Role-resolver is able to execute the view that correponds to the roles of the current user
