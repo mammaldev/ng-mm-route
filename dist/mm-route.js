@@ -244,9 +244,14 @@ angular.module('mmRoute')
   }
 
   function updateCurrentRoute ( chosenView ) {
+    var allowedKeys = [
+      'caseInsensitiveMatch',
+      'reloadOnSearch',
+    ];
+
     if ( $route.current && chosenView ) {
       Object.keys(chosenView).forEach(function ( key ) {
-        if ( !$route.current.$$route[ key ] ) {
+        if ( !$route.current.$$route[ key ] || allowedKeys.indexOf(key) > -1 ) {
           $route.current.$$route[ key ] = chosenView[ key ];
         }
       });
