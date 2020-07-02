@@ -92,7 +92,8 @@ angular.module('mmRoute', [
     // Set up a route via $routeProvider for each route
 
     urlObjects.forEach(function ( urlObject ) {
-      $routeProvider.when(urlObject.url.split('?')[ 0 ], urlObject.routeConf);
+      var urlWithoutQueryString = urlObject.url.replace(/\?[^\/]+$/, '');
+      $routeProvider.when(urlWithoutQueryString, urlObject.routeConf);
     });
 
   };
