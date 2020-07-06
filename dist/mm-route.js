@@ -93,7 +93,6 @@ angular.module('mmRoute', [
 
     urlObjects.forEach(function ( urlObject ) {
       var urlWithoutQueryString = urlObject.url.replace(/\?[^\/]+$/, '');
-      console.log('here', urlWithoutQueryString);
       $routeProvider.when(urlWithoutQueryString, urlObject.routeConf);
     });
 
